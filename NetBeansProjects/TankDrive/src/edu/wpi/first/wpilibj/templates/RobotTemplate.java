@@ -22,13 +22,18 @@ import edu.wpi.first.wpilibj.Timer;
  * directory.
  */
 public class RobotTemplate extends SimpleRobot {
+    final int frontLeft = 1;
+    final int rearLeft = 2;
+    final int frontRight = 3;
+    final int rearRight = 4;
+    
     
     RobotDrive myDrive;
     Joystick moveStick;
     
     //This initializes controls and motors
     public void robotInit(){
-        myDrive = new RobotDrive(1, 2, 3, 4);
+        myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
         
     }

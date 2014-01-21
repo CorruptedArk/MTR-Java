@@ -20,6 +20,12 @@ import edu.wpi.first.wpilibj.Timer;
  * directory.
  */
 public class RobotTemplate extends SimpleRobot {
+    final int frontLeft = 1;
+    final int rearLeft = 2;
+    final int frontRight = 3;
+    final int rearRight = 4;
+    
+    
     RobotDrive myDrive;
     Joystick moveStick;
     
@@ -27,7 +33,7 @@ public class RobotTemplate extends SimpleRobot {
 	*This initializes the motors and controls.
 	**/
     public void robotInit() {
-        myDrive = new RobotDrive(1, 2, 3, 4);
+        myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
     }
     /**
@@ -35,6 +41,13 @@ public class RobotTemplate extends SimpleRobot {
      */
     public void autonomous() {
         myDrive.setSafetyEnabled(false);
+        myDrive.mecanumDrive_Cartesian(0.0, 0.5, 0.0, 0.0);
+        Timer.delay(3.00);
+        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
+        Timer.delay(1.0);
+        myDrive.mecanumDrive_Cartesian(0.0, 0.5, 1.0, 0.0);
+        Timer.delay(3.00);
+        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
     }
 
     /**
