@@ -45,7 +45,7 @@ public class RobotTemplate extends SimpleRobot {
     public void operatorControl() {
         while(isOperatorControl() && isEnabled()) {
             myDrive.setSafetyEnabled(true);
-            myDrive.tankDrive(moveStick.getRawAxis(2), moveStick.getRawAxis(5));
+            myDrive.tankDrive(bufferMove(2), bufferMove(5));
             Timer.delay(0.01);
         }
     }
@@ -66,7 +66,7 @@ public class RobotTemplate extends SimpleRobot {
         double moveIn = moveStick.getRawAxis(axisNum);
         double moveOut;
        
-        if(moveIn >= -5.0 && moveIn <= 5.0) {
+        if(moveIn >= -0.2 && moveIn <= 0.2) {
          moveOut = 0.0;
         }
         else{
