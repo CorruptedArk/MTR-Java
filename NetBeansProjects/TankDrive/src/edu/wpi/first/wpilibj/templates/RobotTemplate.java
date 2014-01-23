@@ -80,7 +80,7 @@ public class RobotTemplate extends SimpleRobot {
         double moveIn = moveStick.getRawAxis(axisNum);
         double moveOut;
        
-        if(moveIn >= -0.08 && moveIn <= 0.08) {
+        if(moveIn >= -0.10 && moveIn <= 0.10) {
          moveOut = 0.0;
         }
         else{
