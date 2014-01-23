@@ -55,6 +55,7 @@ public class RobotTemplate extends SimpleRobot {
      * This function is called once each time the robot enters operator control.
      */
     public void operatorControl() {
+        airCompressor.start();
         while(isOperatorControl() && isEnabled()) {
             myDrive.setSafetyEnabled(true);
             myDrive.tankDrive(bufferMove(2), bufferMove(5));
@@ -62,6 +63,7 @@ public class RobotTemplate extends SimpleRobot {
             s2.set(!moveStick.getRawButton(1));
             Timer.delay(0.01);
         }
+        airCompressor.stop();
     }
     
     /**
