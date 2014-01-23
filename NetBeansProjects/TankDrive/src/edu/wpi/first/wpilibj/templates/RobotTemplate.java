@@ -55,20 +55,18 @@ public class RobotTemplate extends SimpleRobot {
      * This function is called once each time the robot enters operator control.
      */
     public void operatorControl() {
-        airCompressor.start();
+        airCompressor.start(); // Uncomment if compressAuto() is active.
         while(isOperatorControl() && isEnabled()) {
+            //compressManual(2); // Uncomment to manually switch.
+            compressAuto(); // Uncomment to let it switch automatically.
             myDrive.setSafetyEnabled(true);
             myDrive.tankDrive(bufferMove(2), bufferMove(5));
             s1.set(moveStick.getRawButton(1));
             s2.set(!moveStick.getRawButton(1));
-            if(airCompressor.getPressureSwitchValue()) {
-                airCompressor.stop();
-            }
-            else {
-                airCompressor.start();
-            }
+        
         }
-        airCompressor.stop();
+        
+        airCompressor.stop(); // Uncomment if compressAuto() is active.
         Timer.delay(0.01);
     }
     
@@ -77,6 +75,23 @@ public class RobotTemplate extends SimpleRobot {
      */
     public void test() {
     
+    }
+    
+     /**
+     * This function lets you toggle the compressor.
+     * @param buttonId ID of button on controller
+     */
+    public void compressManual(int buttonId) {
+        boolean pressed = moveStick.getRawButton(buttonId);
+        
+        if (airCompressor.enabled() && pressed) {
+            airCompressor.stop();
+        }
+        if (!airCompressor.enabled() && pressed) {
+            airCompressor.start();
+        }
+        
+        
     }
     
     /**
@@ -97,6 +112,17 @@ public class RobotTemplate extends SimpleRobot {
 	
 	return moveOut;
    }
+       /**
+        * This toggles the compressor by pressure.
+        */ 
+   public void compressAuto() {
+         if(airCompressor.getPressureSwitchValue()) {
+                airCompressor.stop();
+            }
+         else {
+                airCompressor.start();
+            } 
+   } 
 
 
 
