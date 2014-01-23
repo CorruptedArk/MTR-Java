@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj.SimpleRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Compressor;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the SimpleRobot
@@ -25,7 +28,9 @@ public class RobotTemplate extends SimpleRobot {
     final int frontRight = 3;
     final int rearRight = 4;
     
-    
+    Solenoid s1;
+    Solenoid s2;
+    Compressor airCompressor;
     RobotDrive myDrive;
     Joystick moveStick;
     
@@ -35,6 +40,10 @@ public class RobotTemplate extends SimpleRobot {
     public void robotInit() {
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
+        airCompressor = new Compressor(1,1);
+        s1 = new Solenoid(1);
+        s2 = new Solenoid(2);
+        
     }
     /**
      * This function is called once each time the robot enters autonomous mode.
@@ -54,13 +63,16 @@ public class RobotTemplate extends SimpleRobot {
      * This function is called once each time the robot enters operator control.
      */
     public void operatorControl() {
+    airCompressor.start();
         while (isOperatorControl() && isEnabled()) {
             myDrive.setSafetyEnabled(true);
             myDrive.mecanumDrive_Cartesian(bufferMove(1), bufferMove(2), bufferMove(4), 0.0);
+            s1.set(moveStick.getRawButton(1));
+            s2.set(!moveStick.getRawButton(1));
             Timer.delay(0.01);
-       
+            
     }
-    
+    airCompressor.stop();
 }    /**
      * This function is called once each time the robot enters test mode.
      */
@@ -78,7 +90,7 @@ public class RobotTemplate extends SimpleRobot {
         double moveIn = moveStick.getRawAxis(axisNum);
         double moveOut;
        
-        if(moveIn >= -0.2 && moveIn <= 0.2 ) {
+        if(moveIn >= -0.10 && moveIn <= 0.10 ) {
          moveOut = 0.0;
         }
         else{
