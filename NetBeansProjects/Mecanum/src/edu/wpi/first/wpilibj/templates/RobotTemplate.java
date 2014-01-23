@@ -43,7 +43,7 @@ public class RobotTemplate extends SimpleRobot {
         airCompressor = new Compressor(1,1);
         s1 = new Solenoid(1);
         s2 = new Solenoid(2);
-        airCompressor.;
+        
     }
     /**
      * This function is called once each time the robot enters autonomous mode.
@@ -63,6 +63,7 @@ public class RobotTemplate extends SimpleRobot {
      * This function is called once each time the robot enters operator control.
      */
     public void operatorControl() {
+    airCompressor.start();
         while (isOperatorControl() && isEnabled()) {
             myDrive.setSafetyEnabled(true);
             myDrive.mecanumDrive_Cartesian(bufferMove(1), bufferMove(2), bufferMove(4), 0.0);
@@ -71,7 +72,7 @@ public class RobotTemplate extends SimpleRobot {
             Timer.delay(0.01);
             
     }
-    
+    airCompressor.stop();
 }    /**
      * This function is called once each time the robot enters test mode.
      */

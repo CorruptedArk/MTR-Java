@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.SimpleRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Compressor;
 
 
 /**
@@ -27,7 +29,9 @@ public class RobotTemplate extends SimpleRobot {
     final int frontRight = 3;
     final int rearRight = 4;
     
-    
+    Solenoid s1;
+    Solenoid s2;
+    Compressor airCompressor;
     RobotDrive myDrive;
     Joystick moveStick;
     
@@ -35,6 +39,9 @@ public class RobotTemplate extends SimpleRobot {
     public void robotInit(){
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
+        airCompressor = new Compressor(1,1);
+        s1 = new Solenoid(1);
+        s2 = new Solenoid(2);
         
     }
     /**
@@ -51,6 +58,8 @@ public class RobotTemplate extends SimpleRobot {
         while(isOperatorControl() && isEnabled()) {
             myDrive.setSafetyEnabled(true);
             myDrive.tankDrive(bufferMove(2), bufferMove(5));
+            s1.set(moveStick.getRawButton(1));
+            s2.set(!moveStick.getRawButton(1));
             Timer.delay(0.01);
         }
     }
