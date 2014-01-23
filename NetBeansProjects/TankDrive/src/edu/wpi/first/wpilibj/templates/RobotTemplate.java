@@ -61,9 +61,15 @@ public class RobotTemplate extends SimpleRobot {
             myDrive.tankDrive(bufferMove(2), bufferMove(5));
             s1.set(moveStick.getRawButton(1));
             s2.set(!moveStick.getRawButton(1));
-            Timer.delay(0.01);
+            if(airCompressor.getPressureSwitchValue()) {
+                airCompressor.stop();
+            }
+            else {
+                airCompressor.start();
+            }
         }
         airCompressor.stop();
+        Timer.delay(0.01);
     }
     
     /**

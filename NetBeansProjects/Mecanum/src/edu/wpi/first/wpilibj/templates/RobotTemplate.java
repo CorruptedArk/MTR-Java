@@ -41,8 +41,8 @@ public class RobotTemplate extends SimpleRobot {
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
         airCompressor = new Compressor(1,1);
-        s1 = new Solenoid(1);
-        s2 = new Solenoid(2);
+        s1 = new Solenoid(3);
+        s2 = new Solenoid(4);
         
     }
     /**
@@ -69,16 +69,23 @@ public class RobotTemplate extends SimpleRobot {
             myDrive.mecanumDrive_Cartesian(bufferMove(1), bufferMove(2), bufferMove(4), 0.0);
             s1.set(moveStick.getRawButton(1));
             s2.set(!moveStick.getRawButton(1));
+            if(airCompressor.getPressureSwitchValue()) {
+                airCompressor.stop();
+            }
+            else {
+                airCompressor.start();
+            }
             Timer.delay(0.01);
-            
     }
     airCompressor.stop();
-}    /**
+}    
+    /**
      * This function is called once each time the robot enters test mode.
      */
     public void test() {
     
     }
+    
     
     
 	/**
