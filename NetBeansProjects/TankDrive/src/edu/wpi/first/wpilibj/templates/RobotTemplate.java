@@ -49,6 +49,21 @@ public class RobotTemplate extends SimpleRobot {
      */
     public void autonomous() {
         myDrive.setSafetyEnabled(false);
+        s1.set(false);
+        s2.set(true);
+        while(!airCompressor.getPressureSwitchValue()){
+            airCompressor.start();
+        }
+        airCompressor.stop();
+        myDrive.tankDrive(1.0, 1.0);
+        Timer.delay(3.0);
+        myDrive.tankDrive(0.0, 0.0);
+        s1.set(true);
+        s2.set(false);
+        Timer.delay(2.0);
+        s1.set(false);
+        s2.set(true);
+          
     }
 
     /**
@@ -63,11 +78,12 @@ public class RobotTemplate extends SimpleRobot {
             myDrive.tankDrive(bufferMove(2), bufferMove(5));
             s1.set(moveStick.getRawButton(1));
             s2.set(!moveStick.getRawButton(1));
-        
+            
+            Timer.delay(0.01);
         }
         
         airCompressor.stop(); // Uncomment if compressAuto() is active.
-        Timer.delay(0.01);
+        
     }
     
     /**

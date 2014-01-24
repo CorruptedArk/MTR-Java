@@ -50,13 +50,20 @@ public class RobotTemplate extends SimpleRobot {
      */
     public void autonomous() {
         myDrive.setSafetyEnabled(false);
-        myDrive.mecanumDrive_Cartesian(0.0, 0.5, 0.0, 0.0);
-        Timer.delay(3.00);
+        s1.set(false);
+        s2.set(true);
+        while(!airCompressor.getPressureSwitchValue()){
+            airCompressor.start();
+        }
+        airCompressor.stop();
+        myDrive.mecanumDrive_Cartesian(0.0, 1.0, 0.0, 0.0);
+        Timer.delay(3.0);
         myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
-        Timer.delay(1.0);
-        myDrive.mecanumDrive_Cartesian(0.0, 0.5, 1.0, 0.0);
-        Timer.delay(3.00);
-        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
+        s1.set(true);
+        s2.set(false);
+        Timer.delay(2.0);
+        s1.set(false);
+        s2.set(true);
     }
 
     /**
