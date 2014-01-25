@@ -33,6 +33,8 @@ public class RobotTemplate extends SimpleRobot {
     Compressor airCompressor;
     RobotDrive myDrive;
     Joystick moveStick;
+    AirRunnable airRun;
+    Thread airThread; 
     
     /**
 	*This initializes the motors and controls.
@@ -43,37 +45,39 @@ public class RobotTemplate extends SimpleRobot {
         airCompressor = new Compressor(1,1);
         s1 = new Solenoid(3);
         s2 = new Solenoid(4);
+        airRun = new AirRunnable();
+        airThread = new Thread(airRun);
         
     }
     /**
      * This function is called once each time the robot enters autonomous mode.
      */
     public void autonomous() {
-        myDrive.setSafetyEnabled(false);
-        s1.set(false);
-        s2.set(true);
-        while(!airCompressor.getPressureSwitchValue()){
-            airCompressor.start();
-        }
-        airCompressor.stop();
-        myDrive.mecanumDrive_Cartesian(0.0, 1.0, 0.0, 0.0);
-        Timer.delay(3.0);
-        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
-        s1.set(true);
-        s2.set(false);
-        Timer.delay(2.0);
-        s1.set(false);
-        s2.set(true);
+        myDrive.setSafetyEnabled(false);  
+        s1.set(false); // sets initial s1 value
+        s2.set(true);  // sets initial s2 value
+        airThread.start(); // starts compressor switching loop in parallel.
+        myDrive.mecanumDrive_Cartesian(0.0, 1.0, 0.0, 0.0); // starts movement
+        Timer.delay(3.0); // delays input for 3 seconds
+        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0); // stops movement
+        s1.set(true); // switches s1 value
+        s2.set(false); // switches s2 value
+        Timer.delay(2.0); // delays input for 2 seconds
+        s1.set(false); // switches s1 value
+        s2.set(true); // switches s2 value
+        airRun.stop(); // ends compressor switching loop 
+        airCompressor.stop(); // turns off the compressor
+    
     }
 
+    
     /**
      * This function is called once each time the robot enters operator control.
      */
     public void operatorControl() {
-        airCompressor.start(); // Uncomment if compressAuto() is active.
+        airThread.start(); // starts automatic compressor switching in parallel
         while (isOperatorControl() && isEnabled()) {
-            //compressManual(2); // Uncomment to manually switch.
-            compressAuto(); // Uncomment to let it switch automatically.
+            //compressManual(2); // Use to manually switch compressor.
             myDrive.setSafetyEnabled(true);
             myDrive.mecanumDrive_Cartesian(bufferMove(1), bufferMove(2), bufferMove(4), 0.0);
             s1.set(moveStick.getRawButton(1));
@@ -81,7 +85,8 @@ public class RobotTemplate extends SimpleRobot {
            
             Timer.delay(0.01);
         }
-        airCompressor.stop(); // Uncomment if compressAuto() is active.
+        airRun.stop(); // stops automatic switching.
+        airCompressor.stop(); // disables the compressor
 }    
     /**
      * This function is called once each time the robot enters test mode.
@@ -127,7 +132,7 @@ public class RobotTemplate extends SimpleRobot {
    }
    
         /**
-         * This toggles the compressor by pressure.
+         * This toggles the compressor by pressure in a single thread.
          */
     public void compressAuto() {
        if (airCompressor.getPressureSwitchValue()) {
