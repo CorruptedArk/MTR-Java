@@ -30,5 +30,6 @@ public class AirRunnable implements Runnable {
     
     public void stop() {
         running = false;
+        airCompressor.stop();
     }
 }

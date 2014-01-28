@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Compressor;
+//import edu.wpi.first.wpilibj.Compressor;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -30,7 +30,7 @@ public class RobotTemplate extends SimpleRobot {
     
     Solenoid s1;
     Solenoid s2;
-    Compressor airCompressor;
+   //Compressor airCompressor;
     RobotDrive myDrive;
     Joystick moveStick;
     AirRunnable airRun;
@@ -42,7 +42,7 @@ public class RobotTemplate extends SimpleRobot {
     public void robotInit() {
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
-        airCompressor = new Compressor(1,1);
+        //airCompressor = new Compressor(1,1);
         s1 = new Solenoid(3);
         s2 = new Solenoid(4);
         airRun = new AirRunnable();
@@ -66,7 +66,7 @@ public class RobotTemplate extends SimpleRobot {
         s1.set(false); // switches s1 value
         s2.set(true); // switches s2 value
         airRun.stop(); // ends compressor switching loop 
-        airCompressor.stop(); // turns off the compressor
+        //airCompressor.stop(); // turns off the compressor
     
     }
 
@@ -80,13 +80,12 @@ public class RobotTemplate extends SimpleRobot {
             //compressManual(2); // Use to manually switch compressor.
             myDrive.setSafetyEnabled(true);
             myDrive.mecanumDrive_Cartesian(bufferMove(1), bufferMove(2), bufferMove(4), 0.0);
-            s1.set(moveStick.getRawButton(1));
-            s2.set(!moveStick.getRawButton(1));
+            solenoidToggle(1,2);
            
             Timer.delay(0.01);
         }
         airRun.stop(); // stops automatic switching.
-        airCompressor.stop(); // disables the compressor
+        //airCompressor.stop(); // disables the compressor
 }    
     /**
      * This function is called once each time the robot enters test mode.
@@ -99,7 +98,7 @@ public class RobotTemplate extends SimpleRobot {
      * This function lets you toggle the compressor.
      * @param buttonId ID of button on controller
      */
-    public void compressManual(int buttonId) {
+    /*public void compressManual(int buttonId) {
         boolean pressed = moveStick.getRawButton(buttonId);
         
         if (airCompressor.enabled() && pressed) {
@@ -110,7 +109,7 @@ public class RobotTemplate extends SimpleRobot {
         }
         
         
-    }
+    }*/
     
 	/**
 	* This function buffers the moveStick.getRawAxis() input.
@@ -134,14 +133,35 @@ public class RobotTemplate extends SimpleRobot {
         /**
          * This toggles the compressor by pressure in a single thread.
          */
-    public void compressAuto() {
+  /*  public void compressAuto() {
        if (airCompressor.getPressureSwitchValue()) {
            airCompressor.stop();
        }
        else {
            airCompressor.start();
        }
-   }
+   }*/
+    
+     /**
+     * This function toggles the solenoids.
+     * @param offButton ID of button to deactivate 
+     * @param onButton ID of button to activate
+     */
+   
+    public void solenoidToggle(int offButton, int onButton) {
+       boolean pressedOn = moveStick.getRawButton(offButton);
+       boolean pressedOff = moveStick.getRawButton(onButton);
+       
+       if (pressedOn) {
+        s1.set(true);
+        s2.set(false);
+       }
+       if (pressedOff) {
+        s1.set(false);
+        s2.set(true);
+       }
+       
+   } 
     
     
 } 
