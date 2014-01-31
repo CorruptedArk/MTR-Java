@@ -24,10 +24,10 @@ import edu.wpi.first.wpilibj.Solenoid;
  * directory.
  */
 public class RobotTemplate extends SimpleRobot {
-    final int frontLeft = 1;
-    final int rearLeft = 2;
-    final int frontRight = 3;
-    final int rearRight = 4;
+    final int frontLeft = 2;
+    final int rearLeft = 4;
+    final int frontRight = 1;
+    final int rearRight = 3;
     
     Solenoid s1;
     Solenoid s2;
@@ -125,7 +125,7 @@ public class RobotTemplate extends SimpleRobot {
          moveOut = 0.0;
         }
         else{
-         moveOut = moveStick.getRawAxis(axisNum);
+         moveOut = -moveStick.getRawAxis(axisNum);
         }
 	
 	return moveOut;

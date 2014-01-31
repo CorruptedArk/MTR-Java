@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Victor;
+
 //import edu.wpi.first.wpilibj.Compressor;
 
 /**
@@ -35,6 +37,7 @@ public class RobotTemplate extends SimpleRobot {
     Joystick moveStick;
     AirRunnable airRun;
     Thread airThread; 
+    Victor motorOne;
     
     /**
 	*This initializes the motors and controls.
@@ -47,6 +50,7 @@ public class RobotTemplate extends SimpleRobot {
         s2 = new Solenoid(4);
         airRun = new AirRunnable();
         airThread = new Thread(airRun);
+        motorOne = new Victor(5);
         
     }
     /**
@@ -80,7 +84,9 @@ public class RobotTemplate extends SimpleRobot {
             //compressManual(2); // Use to manually switch compressor.
             myDrive.setSafetyEnabled(true);
             myDrive.mecanumDrive_Cartesian(bufferMove(1), bufferMove(2), bufferMove(4), 0.0);
+            motorOne.set(bufferMove(3));
             solenoidToggle(1,2);
+            
            
             Timer.delay(0.01);
         }
@@ -161,7 +167,13 @@ public class RobotTemplate extends SimpleRobot {
         s2.set(true);
        }
        
+       
+       
    } 
+    
+    public void solenoidClick() {
+        
+    }
     
     
 } 
