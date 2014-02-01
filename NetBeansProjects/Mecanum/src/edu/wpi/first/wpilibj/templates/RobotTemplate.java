@@ -61,7 +61,7 @@ public class RobotTemplate extends SimpleRobot {
         s1.set(false); // sets initial s1 value
         s2.set(true);  // sets initial s2 value
         airThread.start(); // starts compressor switching loop in parallel.
-        myDrive.mecanumDrive_Cartesian(0.0, 1.0, 0.0, 0.0); // starts movement
+        myDrive.mecanumDrive_Cartesian(0.0, -1.0, 0.0, 0.0); // starts movement
         Timer.delay(3.0); // delays input for 3 seconds
         myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0); // stops movement
         s1.set(true); // switches s1 value
@@ -83,9 +83,9 @@ public class RobotTemplate extends SimpleRobot {
         while (isOperatorControl() && isEnabled()) {
             //compressManual(2); // Use to manually switch compressor.
             myDrive.setSafetyEnabled(true);
-            myDrive.mecanumDrive_Cartesian(bufferMove(1), bufferMove(2), bufferMove(4), 0.0);
-            motorOne.set(bufferMove(3));
-            solenoidToggle(1,2);
+            myDrive.mecanumDrive_Cartesian(bufferMove(1, moveStick), bufferMove(2, moveStick), bufferMove(4, moveStick), 0.0);
+            motorOne.set(bufferMove(3, moveStick));
+            solenoidToggle(1,2,moveStick, s1, s2);
             
            
             Timer.delay(0.01);
@@ -100,37 +100,23 @@ public class RobotTemplate extends SimpleRobot {
     
     }
     
-    /**
-     * This function lets you toggle the compressor.
-     * @param buttonId ID of button on controller
-     */
-    /*public void compressManual(int buttonId) {
-        boolean pressed = moveStick.getRawButton(buttonId);
-        
-        if (airCompressor.enabled() && pressed) {
-            airCompressor.stop();
-        }
-        if (!airCompressor.enabled() && pressed) {
-            airCompressor.start();
-        }
-        
-        
-    }*/
+  
     
 	/**
 	* This function buffers the moveStick.getRawAxis() input.
         * @param axisNum The ID for the axis in moveStick.
+        * @param joystickName The Joystick that input is coming from. 
         * @return moveOut - The buffered axis data from moveStick.getRawAxis().
 	**/
-    public double bufferMove(int axisNum) {
-        double moveIn = moveStick.getRawAxis(axisNum);
+    public double bufferMove(int axisNum,Joystick joystickName) {
+        double moveIn = joystickName.getRawAxis(axisNum);
         double moveOut;
        
         if(moveIn >= -0.10 && moveIn <= 0.10 ) {
          moveOut = 0.0;
         }
         else{
-         moveOut = moveStick.getRawAxis(axisNum);
+         moveOut = -joystickName.getRawAxis(axisNum);
         }
 	
 	return moveOut;
@@ -149,29 +135,47 @@ public class RobotTemplate extends SimpleRobot {
    }*/
     
      /**
-     * This function toggles the solenoids.
+     * This function toggles the solenoids with two buttons.
      * @param offButton ID of button to deactivate 
      * @param onButton ID of button to activate
+     * @param joystickName Name of Joystick input is coming from
+     * @param solenoid1 The first solenoid
+     * @param solenoid2 The second solenoid
      */
    
-    public void solenoidToggle(int offButton, int onButton) {
-       boolean pressedOn = moveStick.getRawButton(offButton);
-       boolean pressedOff = moveStick.getRawButton(onButton);
+    public void solenoidToggle(int offButton, int onButton, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2 ) {
+       boolean pressedOn = joystickName.getRawButton(onButton);
+       boolean pressedOff = joystickName.getRawButton(offButton);
        
        if (pressedOn) {
-        s1.set(true);
-        s2.set(false);
+        solenoid1.set(true);
+        solenoid2.set(false);
        }
        if (pressedOff) {
-        s1.set(false);
-        s2.set(true);
+        solenoid1.set(false);
+        solenoid2.set(true);
        }
        
-       
-       
-   } 
+     } 
     
-    public void solenoidClick() {
+    /**
+     * This function toggles the solenoid with one button. 
+     * @param toggleButton ID of button to toggle with.
+     * @param joystickName Name of Joystick
+     * @param solenoid1 First Solenoid
+     * @param solenoid2 Second Solenoid
+     */
+    public void solenoidClick(int toggleButton, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2) {
+        boolean pressed = joystickName.getRawButton(toggleButton);
+        
+        if (pressed) {
+            solenoid1.set(!solenoid1.get());
+            solenoid2.set(!solenoid2.get());
+            while (pressed) {
+                solenoid1.set(solenoid1.get());
+                solenoid2.set(solenoid2.get());
+            }
+        } 
         
     }
     
