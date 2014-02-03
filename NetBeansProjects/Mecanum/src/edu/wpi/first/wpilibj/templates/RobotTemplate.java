@@ -83,8 +83,8 @@ public class RobotTemplate extends SimpleRobot {
         while (isOperatorControl() && isEnabled()) {
             //compressManual(2); // Use to manually switch compressor.
             myDrive.setSafetyEnabled(true);
-            myDrive.mecanumDrive_Cartesian(bufferMove(1, moveStick), bufferMove(2, moveStick), bufferMove(4, moveStick), 0.0);
-            motorOne.set(bufferMove(3, moveStick));
+            myDrive.mecanumDrive_Cartesian(buffer(1, moveStick, false), buffer(2, moveStick, false), buffer(4, moveStick, false), 0.0);
+            motorOne.set(buffer(3, moveStick, false));
             solenoidToggle(1,2,moveStick, s1, s2);
             
            
@@ -106,17 +106,24 @@ public class RobotTemplate extends SimpleRobot {
 	* This function buffers the moveStick.getRawAxis() input.
         * @param axisNum The ID for the axis in moveStick.
         * @param joystickName The Joystick that input is coming from. 
-        * @return moveOut - The buffered axis data from moveStick.getRawAxis().
+        * @param inverted Is it flipped?
+        * @return moveOut - The buffered axis data from joystickName.getRawAxis().
 	**/
-    public double bufferMove(int axisNum,Joystick joystickName) {
+    public double buffer(int axisNum,Joystick joystickName, boolean inverted) {
         double moveIn = joystickName.getRawAxis(axisNum);
         double moveOut;
+        moveOut = 0.0;
+        
        
         if(moveIn >= -0.10 && moveIn <= 0.10 ) {
          moveOut = 0.0;
         }
         else{
-         moveOut = -joystickName.getRawAxis(axisNum);
+            if(inverted){
+                moveOut = -moveIn;
+            }
+            if(!inverted)
+                moveOut = moveIn;
         }
 	
 	return moveOut;
