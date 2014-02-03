@@ -4,3 +4,8 @@
 *.jar
 *.war
 *.ear
+*.MF
+*.suite
+*.metadata
+*.sym
+*.xml
