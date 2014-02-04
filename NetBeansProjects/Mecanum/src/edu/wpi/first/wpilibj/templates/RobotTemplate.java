@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.Victor;
  * directory.
  */
 public class RobotTemplate extends SimpleRobot {
-    final int frontLeft =2;
+    final int frontLeft = 2;
     final int rearLeft = 3;
     final int frontRight = 1;
     final int rearRight = 4;
@@ -51,7 +51,8 @@ public class RobotTemplate extends SimpleRobot {
         airRun = new AirRunnable();
         airThread = new Thread(airRun);
         motorOne = new Victor(5);
-        
+        myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
+        myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
     }
     /**
      * This function is called once each time the robot enters autonomous mode.
@@ -61,7 +62,7 @@ public class RobotTemplate extends SimpleRobot {
         s1.set(false); // sets initial s1 value
         s2.set(true);  // sets initial s2 value
         airThread.start(); // starts compressor switching loop in parallel.
-        myDrive.mecanumDrive_Cartesian(0.0, -1.0, 0.0, 0.0); // starts movement
+        myDrive.mecanumDrive_Cartesian(1.0, 0.0, 0.0, 0.0); // starts movement
         Timer.delay(3.0); // delays input for 3 seconds
         myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0); // stops movement
         s1.set(true); // switches s1 value
@@ -83,7 +84,7 @@ public class RobotTemplate extends SimpleRobot {
         while (isOperatorControl() && isEnabled()) {
             //compressManual(2); // Use to manually switch compressor.
             myDrive.setSafetyEnabled(true);
-            myDrive.mecanumDrive_Cartesian(buffer(1, moveStick, false), buffer(2, moveStick, false), buffer(4, moveStick, false), 0.0);
+            myDrive.mecanumDrive_Cartesian(buffer(1, moveStick, true), buffer(2, moveStick, true), buffer(4, moveStick, true), 0.0);
             motorOne.set(buffer(3, moveStick, false));
             solenoidToggle(1,2,moveStick, s1, s2);
             
@@ -115,7 +116,7 @@ public class RobotTemplate extends SimpleRobot {
         moveOut = 0.0;
         
        
-        if(moveIn >= -0.10 && moveIn <= 0.10 ) {
+        if(moveIn >= -0.2 && moveIn <= 0.20 ) {
          moveOut = 0.0;
         }
         else{
