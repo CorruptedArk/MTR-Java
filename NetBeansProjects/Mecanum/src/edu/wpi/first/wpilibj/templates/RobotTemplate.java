@@ -25,9 +25,9 @@ import edu.wpi.first.wpilibj.Victor;
  * directory.
  */
 public class RobotTemplate extends SimpleRobot {
-    final int frontLeft = 1;
-    final int rearLeft = 2;
-    final int frontRight = 3;
+    final int frontLeft =2;
+    final int rearLeft = 3;
+    final int frontRight = 1;
     final int rearRight = 4;
     
     Solenoid s1;
