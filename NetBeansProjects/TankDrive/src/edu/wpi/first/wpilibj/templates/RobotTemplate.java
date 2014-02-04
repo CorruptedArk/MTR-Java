@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
-//import edu.wpi.first.wpilibj.Compressor;
+
 
 
 /**
@@ -32,7 +32,6 @@ public class RobotTemplate extends SimpleRobot {
     
     Solenoid s1;
     Solenoid s2;
-    //Compressor airCompressor;
     RobotDrive myDrive;
     Joystick moveStick;
     AirRunnable airRun;
@@ -43,7 +42,6 @@ public class RobotTemplate extends SimpleRobot {
     public void robotInit(){
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
-        //airCompressor = new Compressor(1,1);
         s1 = new Solenoid(3);
         s2 = new Solenoid(4);
         airRun = new AirRunnable();
@@ -79,7 +77,6 @@ public class RobotTemplate extends SimpleRobot {
     public void operatorControl() {
         airThread.start(); // starts automatic compressor switching in parallel
         while(isOperatorControl() && isEnabled()) {
-            //compressManual(2); // Uncomment to manually switch.
             myDrive.setSafetyEnabled(true);
             myDrive.tankDrive(buffer(2,moveStick, true), buffer(5,moveStick, true));
             motorOne.set(buffer(3, moveStick, false));
@@ -89,7 +86,7 @@ public class RobotTemplate extends SimpleRobot {
             Timer.delay(0.01);
         }
         airRun.stop(); // stops automatic switching
-        //airCompressor.stop(); // disables the compressor
+       
         
     }
     
@@ -133,19 +130,7 @@ public class RobotTemplate extends SimpleRobot {
     
     
     
-    
-    /**
-        * This toggles the compressor by pressure.
-        */ 
-   /*public void compressAuto() {
-         if(airCompressor.getPressureSwitchValue()) {
-                airCompressor.stop();
-            }
-         else {
-                airCompressor.start();
-            } 
-   }*/ 
-    
+   
      
     
     /**
@@ -193,6 +178,8 @@ public class RobotTemplate extends SimpleRobot {
         } 
         
     }
+    
+    
     
    /**
     * Controller Mapping

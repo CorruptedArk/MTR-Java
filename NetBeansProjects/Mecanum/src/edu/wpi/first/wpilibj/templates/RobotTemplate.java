@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
 
-//import edu.wpi.first.wpilibj.Compressor;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,7 +32,6 @@ public class RobotTemplate extends SimpleRobot {
     
     Solenoid s1;
     Solenoid s2;
-   //Compressor airCompressor;
     RobotDrive myDrive;
     Joystick moveStick;
     AirRunnable airRun;
@@ -45,7 +44,6 @@ public class RobotTemplate extends SimpleRobot {
     public void robotInit() {
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
-        //airCompressor = new Compressor(1,1);
         s1 = new Solenoid(3);
         s2 = new Solenoid(4);
         airRun = new AirRunnable();
@@ -71,7 +69,7 @@ public class RobotTemplate extends SimpleRobot {
         s1.set(false); // switches s1 value
         s2.set(true); // switches s2 value
         airRun.stop(); // ends compressor switching loop 
-        //airCompressor.stop(); // turns off the compressor
+        
     
     }
 
@@ -82,7 +80,6 @@ public class RobotTemplate extends SimpleRobot {
     public void operatorControl() {
         airThread.start(); // starts automatic compressor switching in parallel
         while (isOperatorControl() && isEnabled()) {
-            //compressManual(2); // Use to manually switch compressor.
             myDrive.setSafetyEnabled(true);
             myDrive.mecanumDrive_Cartesian(buffer(1, moveStick, true), buffer(2, moveStick, true), buffer(4, moveStick, true), 0.0);
             motorOne.set(buffer(3, moveStick, false));
@@ -130,17 +127,7 @@ public class RobotTemplate extends SimpleRobot {
 	return moveOut;
    }
    
-        /**
-         * This toggles the compressor by pressure in a single thread.
-         */
-  /*  public void compressAuto() {
-       if (airCompressor.getPressureSwitchValue()) {
-           airCompressor.stop();
-       }
-       else {
-           airCompressor.start();
-       }
-   }*/
+        
     
      /**
      * This function toggles the solenoids with two buttons.
