@@ -186,8 +186,33 @@ public class RobotTemplate extends SimpleRobot {
         } 
         
     }
-    
-    
+   /**
+    * Controller Mapping
+    1: A
+    2: B
+    3: X
+    4: Y
+    5: Left Bumper
+    6: Right Bumper
+    7: Back
+    8: Start
+    9: Left Joystick
+    10: Right Joystick
+
+    The axis on the controller follow this mapping
+    (all output is between -1 and 1)
+    1: Left Stick X Axis
+    -Left:Negative ; Right: Positive
+    2: Left Stick Y Axis
+    -Up: Negative ; Down: Positive
+    3: Triggers
+    -Left: Positive ; Right: Negative
+    4: Right Stick X Axis
+    -Left: Negative ; Right: Positive
+    5: Right Stick Y Axis
+    -Up: Negative ; Down: Positive
+    6: Directional Pad (Not recommended, buggy)
+    */        
 } 
       
 
