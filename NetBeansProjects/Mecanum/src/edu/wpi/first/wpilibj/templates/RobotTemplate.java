@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.Compressor;
 
 
 
@@ -30,6 +31,7 @@ public class RobotTemplate extends SimpleRobot {
     final int frontRight = 1;
     final int rearRight = 4;
     
+    Compressor airCompressor;
     Solenoid s1;
     Solenoid s2;
     RobotDrive myDrive;
@@ -37,6 +39,8 @@ public class RobotTemplate extends SimpleRobot {
     AirRunnable airRun;
     Thread airThread; 
     Victor motorOne;
+    SolenoidClick clickerRun;
+    Thread clickerThread;
     
     /**
 	*This initializes the motors and controls.
@@ -44,17 +48,19 @@ public class RobotTemplate extends SimpleRobot {
     public void robotInit() {
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
+        airCompressor = new Compressor(1,1);
         s1 = new Solenoid(3);
         s2 = new Solenoid(4);
-        airRun = new AirRunnable();
+        airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
+        clickerRun = new SolenoidClick(1,moveStick,s1,s2);
+        clickerThread = new Thread(clickerRun);
         motorOne = new Victor(5);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
     }
-    /**
-     * This function is called once each time the robot enters autonomous mode.
-     */
+    
+     //This function is called once each time the robot enters autonomous mode.
     public void autonomous() {
         myDrive.setSafetyEnabled(false);  
         s1.set(false); // sets initial s1 value
