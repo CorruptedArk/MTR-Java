@@ -13,8 +13,9 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 
 
@@ -28,19 +29,24 @@ import edu.wpi.first.wpilibj.Compressor;
 public class RobotTemplate extends SimpleRobot {
     final int frontLeft = 2;
     final int rearLeft = 3;
-    final int frontRight = 1;
+    final int frontRight = 5;
     final int rearRight = 4;
     
     Compressor airCompressor;
     Solenoid s1;
     Solenoid s2;
+    Solenoid s3;
+    Solenoid s4;
     RobotDrive myDrive;
     Joystick moveStick;
     AirRunnable airRun;
-    Thread airThread; 
-    Victor motorOne;
-    SolenoidClick clickerRun;
-    Thread clickerThread;
+    Thread airThread;
+    SolenoidClick launcherRun;
+    Thread launcherThread;
+    SolenoidClick raiseRun;
+    Thread raiseThread;
+    Relay launcherRelay;
+    DigitalInput launcherSwitch;
     
     /**
 	*This initializes the motors and controls.
@@ -49,13 +55,18 @@ public class RobotTemplate extends SimpleRobot {
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
         airCompressor = new Compressor(1,1);
-        s1 = new Solenoid(3);
-        s2 = new Solenoid(4);
+        s1 = new Solenoid(1);
+        s2 = new Solenoid(2);
+        s3 = new Solenoid(3);
+        s3 = new Solenoid(4);
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
-        clickerRun = new SolenoidClick(1,moveStick,s1,s2);
-        clickerThread = new Thread(clickerRun);
-        motorOne = new Victor(5);
+        launcherRun = new SolenoidClick(1,moveStick,s1,s2);
+        launcherThread = new Thread(launcherRun);
+        raiseRun = new SolenoidClick(1,moveStick,s3,s4);
+        raiseThread = new Thread(raiseRun);
+        launcherRelay = new Relay(4);
+        launcherSwitch = new DigitalInput(5);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
     }
@@ -85,11 +96,19 @@ public class RobotTemplate extends SimpleRobot {
      */
     public void operatorControl() {
         airThread.start(); // starts automatic compressor switching in parallel
+        //s1.set(true);
+        //s2.set(false);
+        //s3.set(false);
+        //s4.set(true);
         while (isOperatorControl() && isEnabled()) {
             myDrive.setSafetyEnabled(true);
             myDrive.mecanumDrive_Cartesian(buffer(1, moveStick, true), buffer(2, moveStick, true), buffer(4, moveStick, true), 0.0);
-            motorOne.set(buffer(3, moveStick, false));
-            solenoidToggle(1,2,moveStick, s1, s2);
+            relayControl(launcherRelay, launcherSwitch);
+            
+           
+            //launcherThread.start();
+            //raiseThread.start();
+            
             
            
             Timer.delay(0.01);
@@ -119,7 +138,7 @@ public class RobotTemplate extends SimpleRobot {
         moveOut = 0.0;
         
        
-        if(moveIn >= -0.2 && moveIn <= 0.20 ) {
+        if(moveIn >= -0.10 && moveIn <= 0.10 ) {
          moveOut = 0.0;
         }
         else{
@@ -177,6 +196,23 @@ public class RobotTemplate extends SimpleRobot {
                 solenoid2.set(solenoid2.get());
             }
         } 
+        
+    }
+    /**
+     * This function controls operation of a relay.
+     * @param relayName The Relay object.
+     * @param switchName The the switch for input.
+     */
+    
+    public void relayControl(Relay relayName, DigitalInput switchName ){
+        
+        if(!switchName.get()) {
+            relayName.set(Relay.Value.kForward);
+        }
+        if(switchName.get()) {
+            relayName.set(Relay.Value.kOff);
+        }
+        
         
     }
    /**
