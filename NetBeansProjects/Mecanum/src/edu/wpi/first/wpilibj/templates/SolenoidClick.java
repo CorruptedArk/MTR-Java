@@ -19,6 +19,8 @@ public class SolenoidClick implements Runnable{
     private final Solenoid solenoid1;
     private final Solenoid solenoid2;
     
+    private static boolean running = true;
+    
     /**
      * This constructor passes the needed objects to control the solenoid.
      * @param toggleButton The ID of the button to toggle with
@@ -33,18 +35,28 @@ public class SolenoidClick implements Runnable{
         this.solenoid2 = solenoid2;
     }
     
+  
+    
     public void run() {
-        boolean pressed = joystickName.getRawButton(toggleButton);
+       
         
-        if (pressed) {
+        while(running) {       
+            boolean pressed = joystickName.getRawButton(toggleButton);
+        
+            if (pressed) {
             solenoid1.set(!solenoid1.get());
             solenoid2.set(!solenoid2.get());
-            while (pressed) {
-                solenoid1.set(solenoid1.get());
-                solenoid2.set(solenoid2.get());
-            }
-        }
+                while (pressed) {
+                    solenoid1.set(solenoid1.get());
+                    solenoid2.set(solenoid2.get());
+                }
+            }   
         
+        }
+   }     
+    
+    public void stop() {
+        running = false;
     }
     
 }

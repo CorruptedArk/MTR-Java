@@ -58,7 +58,7 @@ public class RobotTemplate extends SimpleRobot {
         s1 = new Solenoid(1);
         s2 = new Solenoid(2);
         s3 = new Solenoid(3);
-        s3 = new Solenoid(4);
+        s4 = new Solenoid(4);
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
         launcherRun = new SolenoidClick(1,moveStick,s1,s2);
@@ -101,12 +101,14 @@ public class RobotTemplate extends SimpleRobot {
         s3.set(false);
         s4.set(true);
         airThread.start(); // starts automatic compressor switching in parallel
+        launcherThread.start();
+        raiseThread.start();
         while (isOperatorControl() && isEnabled()) {
             myDrive.setSafetyEnabled(true);
             myDrive.mecanumDrive_Cartesian(buffer(1, moveStick, true), buffer(2, moveStick, true), buffer(4, moveStick, true), 0.0);
             relayControl(launcherRelay, launcherSwitch);
-            solenoidToggle(1,2,moveStick,s1,s2);
-            solenoidToggle(3,4,moveStick,s1,s2);
+           //solenoidToggle(1,2,moveStick,s1,s2);
+           //solenoidToggle(3,4,moveStick,s1,s2);
            
             
             
@@ -115,6 +117,8 @@ public class RobotTemplate extends SimpleRobot {
             Timer.delay(0.01);
         }
         airRun.stop(); // stops automatic switching.
+        launcherRun.stop();
+        raiseRun.stop();
         //airCompressor.stop(); // disables the compressor
 }    
     /**
