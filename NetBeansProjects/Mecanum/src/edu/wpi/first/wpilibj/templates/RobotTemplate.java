@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class RobotTemplate extends SimpleRobot {
     final int frontLeft = 2;
     final int rearLeft = 3;
-    final int frontRight = 5;
+    final int frontRight = 1;
     final int rearRight = 4;
     
     Compressor airCompressor;
@@ -95,19 +95,20 @@ public class RobotTemplate extends SimpleRobot {
      * This function is called once each time the robot enters operator control.
      */
     public void operatorControl() {
+        
+        s1.set(true);
+        s2.set(false);
+        s3.set(false);
+        s4.set(true);
         airThread.start(); // starts automatic compressor switching in parallel
-        //s1.set(true);
-        //s2.set(false);
-        //s3.set(false);
-        //s4.set(true);
         while (isOperatorControl() && isEnabled()) {
             myDrive.setSafetyEnabled(true);
             myDrive.mecanumDrive_Cartesian(buffer(1, moveStick, true), buffer(2, moveStick, true), buffer(4, moveStick, true), 0.0);
             relayControl(launcherRelay, launcherSwitch);
-            
+            solenoidToggle(1,2,moveStick,s1,s2);
+            solenoidToggle(3,4,moveStick,s1,s2);
            
-            //launcherThread.start();
-            //raiseThread.start();
+            
             
             
            
