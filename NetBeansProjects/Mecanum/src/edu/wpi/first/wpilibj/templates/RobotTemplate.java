@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Ultrasonic; 
 
 
 
@@ -47,6 +48,7 @@ public class RobotTemplate extends SimpleRobot {
     Thread raiseThread;
     Relay launcherRelay;
     DigitalInput launcherSwitch;
+    //Ultrasonic sonic1;    
     
     /**
 	*This initializes the motors and controls.
@@ -58,15 +60,16 @@ public class RobotTemplate extends SimpleRobot {
         s1 = new Solenoid(1);
         s2 = new Solenoid(2);
         s3 = new Solenoid(3);
-        s4 = new Solenoid(4);
+        s4 = new Solenoid(4);     
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
         launcherRun = new SolenoidClick(1,moveStick,s1,s2);
         launcherThread = new Thread(launcherRun);
-        raiseRun = new SolenoidClick(1,moveStick,s3,s4);
+        raiseRun = new SolenoidClick(2,moveStick,s3,s4);
         raiseThread = new Thread(raiseRun);
         launcherRelay = new Relay(4);
         launcherSwitch = new DigitalInput(5);
+        //sonic1 = new Ultrasonic(1,1);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
     }
@@ -125,6 +128,7 @@ public class RobotTemplate extends SimpleRobot {
      * This function is called once each time the robot enters test mode.
      */
     public void test() {
+        
     
     }
     
@@ -143,7 +147,7 @@ public class RobotTemplate extends SimpleRobot {
         moveOut = 0.0;
         
        
-        if(moveIn >= -0.10 && moveIn <= 0.10 ) {
+        if(moveIn >= -0.18 && moveIn <= 0.18 ) {
          moveOut = 0.0;
         }
         else{
@@ -204,7 +208,7 @@ public class RobotTemplate extends SimpleRobot {
         
     }
     /**
-     * This function controls operation of a relay.
+     * This function controls operation of a relay with a switch.
      * @param relayName The Relay object.
      * @param switchName The the switch for input.
      */
@@ -220,7 +224,46 @@ public class RobotTemplate extends SimpleRobot {
         
         
     }
-   /**
+    
+    /**
+     * This runs the winch with an Ultrasonic senor.
+     * @param relayName
+     * @param sonicPing
+     * @param pullBack 
+     */
+    public void relayControl(Relay relayName, Ultrasonic sonicPing, double pullBack) {
+        
+        sonicPing.setAutomaticMode(true);
+        double pulledBack = sonicPing.getRangeMM();
+        
+        if(pulledBack != pullBack){
+            relayName.set(Relay.Value.kForward);
+        }
+        if(pulledBack == pullBack){
+            relayName.set(Relay.Value.kOff);
+        }
+        
+    }
+    
+    /**
+     * This fires winds the robot and fires based on distance.
+     * @param sensor
+     * 
+     */
+    public void ultraShooting( Ultrasonic sensor, Relay relayName) {
+        
+        sensor.setAutomaticMode(true);
+        
+        double distanceAway = sensor.getRangeMM();
+        double pullBack = 0.0;
+        
+        relayControl(relayName, sensor, pullBack);
+        
+        
+        
+    }
+   
+    /**
     * Controller Mapping
     1: A
     2: B
