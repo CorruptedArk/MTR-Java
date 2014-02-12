@@ -16,7 +16,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Ultrasonic; 
+import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
@@ -42,12 +43,13 @@ public class RobotTemplate extends SimpleRobot {
     Joystick moveStick;
     AirRunnable airRun;
     Thread airThread;
-    SolenoidClick launcherRun;
-    Thread launcherThread;
-    SolenoidClick raiseRun;
-    Thread raiseThread;
+    SolenoidClick launcherRun1;
+    Thread launcherThread1;
+    SolenoidClick launcherRun2;
+    Thread launcherThread2;
     Relay launcherRelay;
     DigitalInput launcherSwitch;
+    
     //Ultrasonic sonic1;    
     
     /**
@@ -63,10 +65,10 @@ public class RobotTemplate extends SimpleRobot {
         s4 = new Solenoid(4);     
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
-        launcherRun = new SolenoidClick(1,moveStick,s1,s2);
-        launcherThread = new Thread(launcherRun);
-        raiseRun = new SolenoidClick(2,moveStick,s3,s4);
-        raiseThread = new Thread(raiseRun);
+        launcherRun1 = new SolenoidClick(1,moveStick,s1,s2);
+        launcherThread1 = new Thread(launcherRun1);
+        launcherRun2 = new SolenoidClick(1,moveStick,s3,s4);
+        launcherThread2 = new Thread(launcherRun2);
         launcherRelay = new Relay(4);
         launcherSwitch = new DigitalInput(5);
         //sonic1 = new Ultrasonic(1,1);
@@ -99,29 +101,29 @@ public class RobotTemplate extends SimpleRobot {
      */
     public void operatorControl() {
         
-        s1.set(true);
-        s2.set(false);
+        s1.set(false);
+        s2.set(true);
         s3.set(false);
         s4.set(true);
         airThread.start(); // starts automatic compressor switching in parallel
-        launcherThread.start();
-        raiseThread.start();
+        launcherThread1.start();
+        launcherThread2.start();
         while (isOperatorControl() && isEnabled()) {
             myDrive.setSafetyEnabled(true);
-            myDrive.mecanumDrive_Cartesian(buffer(1, moveStick, true), buffer(2, moveStick, true), buffer(4, moveStick, true), 0.0);
+            myDrive.mecanumDrive_Cartesian(buffer(1,moveStick,true,0.18,-0.18), buffer(2,moveStick,true,0.18,-0.18), buffer(4,moveStick,true,0.18,0.-18), 0.0);
             relayControl(launcherRelay, launcherSwitch);
            //solenoidToggle(1,2,moveStick,s1,s2);
            //solenoidToggle(3,4,moveStick,s1,s2);
            
-            
-            
-            
+          
+           
+           
            
             Timer.delay(0.01);
         }
         airRun.stop(); // stops automatic switching.
-        launcherRun.stop();
-        raiseRun.stop();
+        launcherRun1.stop();
+        launcherRun2.stop();
         //airCompressor.stop(); // disables the compressor
 }    
     /**
@@ -139,15 +141,17 @@ public class RobotTemplate extends SimpleRobot {
         * @param axisNum The ID for the axis in moveStick.
         * @param joystickName The Joystick that input is coming from. 
         * @param inverted Is it flipped?
+        * @param highMargin The high margin of the buffer.
+        * @param lowMargin The high margin of the buffer.
         * @return moveOut - The buffered axis data from joystickName.getRawAxis().
 	**/
-    public double buffer(int axisNum,Joystick joystickName, boolean inverted) {
+    public double buffer(int axisNum,Joystick joystickName, boolean inverted, double highMargin, double lowMargin) {
         double moveIn = joystickName.getRawAxis(axisNum);
         double moveOut;
         moveOut = 0.0;
         
        
-        if(moveIn >= -0.18 && moveIn <= 0.18 ) {
+        if(moveIn >= lowMargin && moveIn <= highMargin ) {
          moveOut = 0.0;
         }
         else{
@@ -227,9 +231,9 @@ public class RobotTemplate extends SimpleRobot {
     
     /**
      * This runs the winch with an Ultrasonic senor.
-     * @param relayName
-     * @param sonicPing
-     * @param pullBack 
+     * @param relayName The relay spike.
+     * @param sonicPing The ultrasonic sensor.
+     * @param pullBack The distance to pull back.
      */
     public void relayControl(Relay relayName, Ultrasonic sonicPing, double pullBack) {
         
@@ -246,20 +250,24 @@ public class RobotTemplate extends SimpleRobot {
     }
     
     /**
-     * This fires winds the robot and fires based on distance.
-     * @param sensor
-     * 
+     * Tells you if you're ready to fire.
+     * @param sensor The Ultrasonic sensor.
+     * @param wantedDistance The distance to fire from.
      */
-    public void ultraShooting( Ultrasonic sensor, Relay relayName) {
+    public void ultraShooting( Ultrasonic sensor, double wantedDistance) {
         
         sensor.setAutomaticMode(true);
         
+        
         double distanceAway = sensor.getRangeMM();
-        double pullBack = 0.0;
         
-        relayControl(relayName, sensor, pullBack);
-        
-        
+        if(wantedDistance == distanceAway) {
+            SmartDashboard.putString("Ready to fire?", "Yeah, fire that ball!");
+            
+        }
+        else {
+            SmartDashboard.putString("Ready to fire?","Nope.");
+        }
         
     }
    

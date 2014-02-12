@@ -47,6 +47,7 @@ public class SolenoidClick implements Runnable{
             solenoid1.set(!solenoid1.get());
             solenoid2.set(!solenoid2.get());
                 while (pressed) {
+                    pressed = joystickName.getRawButton(toggleButton);
                     solenoid1.set(solenoid1.get());
                     solenoid2.set(solenoid2.get());
                 }
