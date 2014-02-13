@@ -61,7 +61,7 @@ public class RobotTemplate extends SimpleRobot {
         airCompressor = new Compressor(1,1);
         s1 = new Solenoid(1);
         s2 = new Solenoid(2);
-        s3 = new Solenoid(3);
+        s3 = new Solenoid(5);
         s4 = new Solenoid(4);     
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
@@ -101,16 +101,16 @@ public class RobotTemplate extends SimpleRobot {
      */
     public void operatorControl() {
         
-        s1.set(false);
-        s2.set(true);
-        s3.set(false);
-        s4.set(true);
+        //s1.set(false);
+        //s2.set(true);
+        s3.set(true);
+        s4.set(false);
         airThread.start(); // starts automatic compressor switching in parallel
-        launcherThread1.start();
+        //launcherThread1.start();
         launcherThread2.start();
         while (isOperatorControl() && isEnabled()) {
             myDrive.setSafetyEnabled(true);
-            myDrive.mecanumDrive_Cartesian(buffer(1,moveStick,true,0.18,-0.18), buffer(2,moveStick,true,0.18,-0.18), buffer(4,moveStick,true,0.18,0.-18), 0.0);
+            //myDrive.mecanumDrive_Cartesian(buffer(1,moveStick,true,0.18,-0.18), buffer(2,moveStick,true,0.18,-0.18), buffer(4,moveStick,true,0.18,-0.18), 0.0);
             relayControl(launcherRelay, launcherSwitch);
            //solenoidToggle(1,2,moveStick,s1,s2);
            //solenoidToggle(3,4,moveStick,s1,s2);
@@ -122,7 +122,7 @@ public class RobotTemplate extends SimpleRobot {
             Timer.delay(0.01);
         }
         airRun.stop(); // stops automatic switching.
-        launcherRun1.stop();
+        //launcherRun1.stop();
         launcherRun2.stop();
         //airCompressor.stop(); // disables the compressor
 }    
