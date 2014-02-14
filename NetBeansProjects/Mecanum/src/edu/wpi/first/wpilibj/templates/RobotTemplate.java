@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -49,12 +50,14 @@ public class RobotTemplate extends SimpleRobot {
     Thread launcherThread2;
     Relay launcherRelay;
     DigitalInput launcherSwitch;
-    
+    Victor motorOne;
+    Victor motorTwo;
     //Ultrasonic sonic1;    
     
-    /**
-	*This initializes the motors and controls.
-	**/
+    
+
+
+//This initializes the motors and controls.
     public void robotInit() {
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
@@ -72,6 +75,8 @@ public class RobotTemplate extends SimpleRobot {
         launcherRelay = new Relay(4);
         launcherSwitch = new DigitalInput(5);
         //sonic1 = new Ultrasonic(1,1);
+        motorOne = new Victor(5);
+        motorTwo = new Victor(6);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
     }
@@ -106,26 +111,29 @@ public class RobotTemplate extends SimpleRobot {
         s3.set(true);
         s4.set(false);
         airThread.start(); // starts automatic compressor switching in parallel
-        //launcherThread1.start();
+        //launcherThread2.start();
         launcherThread2.start();
         while (isOperatorControl() && isEnabled()) {
-            myDrive.setSafetyEnabled(true);
-            //myDrive.mecanumDrive_Cartesian(buffer(1,moveStick,true,0.18,-0.18), buffer(2,moveStick,true,0.18,-0.18), buffer(4,moveStick,true,0.18,-0.18), 0.0);
-            relayControl(launcherRelay, launcherSwitch);
+           myDrive.setSafetyEnabled(true);
+           double xMovement = buffer(1,moveStick,true,0.18,-0.18);
+           double yMovement = buffer(2,moveStick,true,0.18,-0.18);
+           double twist = buffer(4,moveStick,true,0.18,-0.18);
+           //myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
+           relayControl(launcherRelay, launcherSwitch);
+           motorOne.set(buffer(3,moveStick,false,1.0,-0.18));
+           motorTwo.set(buffer(3,moveStick,true,1.0,-0.18));
            //solenoidToggle(1,2,moveStick,s1,s2);
-           //solenoidToggle(3,4,moveStick,s1,s2);
+           //solenoidToggle(3,4,moveStick,s3,s4);
            
           
-           
-           
-           
-            Timer.delay(0.01);
+           Timer.delay(0.01);
         }
         airRun.stop(); // stops automatic switching.
         //launcherRun1.stop();
         launcherRun2.stop();
-        //airCompressor.stop(); // disables the compressor
-}    
+        
+    }    
+    
     /**
      * This function is called once each time the robot enters test mode.
      */
@@ -137,12 +145,12 @@ public class RobotTemplate extends SimpleRobot {
   
     
 	/**
-	* This function buffers the moveStick.getRawAxis() input.
+	* This function buffers the joystickName.getRawAxis() input.
         * @param axisNum The ID for the axis in moveStick.
         * @param joystickName The Joystick that input is coming from. 
         * @param inverted Is it flipped?
         * @param highMargin The high margin of the buffer.
-        * @param lowMargin The high margin of the buffer.
+        * @param lowMargin The low margin of the buffer.
         * @return moveOut - The buffered axis data from joystickName.getRawAxis().
 	**/
     public double buffer(int axisNum,Joystick joystickName, boolean inverted, double highMargin, double lowMargin) {
@@ -150,7 +158,6 @@ public class RobotTemplate extends SimpleRobot {
         double moveOut;
         moveOut = 0.0;
         
-       
         if(moveIn >= lowMargin && moveIn <= highMargin ) {
          moveOut = 0.0;
         }
@@ -158,8 +165,9 @@ public class RobotTemplate extends SimpleRobot {
             if(inverted){
                 moveOut = -moveIn;
             }
-            if(!inverted)
+            if(!inverted){ 
                 moveOut = moveIn;
+            }    
         }
 	
 	return moveOut;
@@ -167,7 +175,7 @@ public class RobotTemplate extends SimpleRobot {
    
         
     
-     /**
+    /**
      * This function toggles the solenoids with two buttons.
      * @param offButton ID of button to deactivate 
      * @param onButton ID of button to activate
@@ -214,7 +222,7 @@ public class RobotTemplate extends SimpleRobot {
     /**
      * This function controls operation of a relay with a switch.
      * @param relayName The Relay object.
-     * @param switchName The the switch for input.
+     * @param switchName The switch for input.
      */
     
     public void relayControl(Relay relayName, DigitalInput switchName ){
@@ -225,8 +233,6 @@ public class RobotTemplate extends SimpleRobot {
         if(switchName.get()) {
             relayName.set(Relay.Value.kOff);
         }
-        
-        
     }
     
     /**
@@ -246,7 +252,6 @@ public class RobotTemplate extends SimpleRobot {
         if(pulledBack == pullBack){
             relayName.set(Relay.Value.kOff);
         }
-        
     }
     
     /**
@@ -254,7 +259,7 @@ public class RobotTemplate extends SimpleRobot {
      * @param sensor The Ultrasonic sensor.
      * @param wantedDistance The distance to fire from.
      */
-    public void ultraShooting( Ultrasonic sensor, double wantedDistance) {
+    public void ultraShooting(Ultrasonic sensor, double wantedDistance) {
         
         sensor.setAutomaticMode(true);
         
@@ -263,7 +268,6 @@ public class RobotTemplate extends SimpleRobot {
         
         if(wantedDistance == distanceAway) {
             SmartDashboard.putString("Ready to fire?", "Yeah, fire that ball!");
-            
         }
         else {
             SmartDashboard.putString("Ready to fire?","Nope.");
