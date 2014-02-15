@@ -68,9 +68,9 @@ public class RobotTemplate extends SimpleRobot {
         s4 = new Solenoid(4);     
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
-        launcherRun1 = new SolenoidClick(1,moveStick,s1,s2);
+        launcherRun1 = new SolenoidClick(1,moveStick,s1,s2,"button");
         launcherThread1 = new Thread(launcherRun1);
-        launcherRun2 = new SolenoidClick(1,moveStick,s3,s4);
+        launcherRun2 = new SolenoidClick(1,moveStick,s3,s4,"button");
         launcherThread2 = new Thread(launcherRun2);
         launcherRelay = new Relay(4);
         launcherSwitch = new DigitalInput(5);
