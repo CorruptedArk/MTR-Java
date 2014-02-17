@@ -48,11 +48,14 @@ public class RobotTemplate extends SimpleRobot {
     Thread launcherThread1;
     SolenoidClick launcherRun2;
     Thread launcherThread2;
+    UltrasonicApproval approvalRun;
+    Thread approvalThread;
     Relay launcherRelay;
     DigitalInput launcherSwitch;
     Victor motorOne;
     Victor motorTwo;
-    //Ultrasonic sonic1;
+    Ultrasonic sonic1;
+    
     
    
     
@@ -74,7 +77,9 @@ public class RobotTemplate extends SimpleRobot {
         launcherThread2 = new Thread(launcherRun2);
         launcherRelay = new Relay(4);
         launcherSwitch = new DigitalInput(5);
-        //sonic1 = new Ultrasonic(1,1);
+        sonic1 = new Ultrasonic(1,1);
+        approvalRun = new UltrasonicApproval(sonic1, 5000.0);
+        approvalThread = new Thread(approvalRun);
         motorOne = new Victor(5);
         motorTwo = new Victor(6);
         
@@ -112,6 +117,7 @@ public class RobotTemplate extends SimpleRobot {
         airThread.start(); // starts automatic compressor switching in parallel
         //launcherThread1.start();
         launcherThread2.start();
+        approvalThread.start();
         while(isOperatorControl() && isEnabled()) {
             myDrive.setSafetyEnabled(true);
             double leftMovement = buffer(2,moveStick,true,0.18,-0.18);
@@ -129,6 +135,7 @@ public class RobotTemplate extends SimpleRobot {
         airRun.stop(); // stops automatic switching
         //launcher1.stop();
         launcherRun2.stop();
+        approvalRun.stop();
         
     }
     
@@ -252,27 +259,7 @@ public class RobotTemplate extends SimpleRobot {
         }
     }
     
-    /**
-     * Tells if you're ready to fire.
-     * @param sensor The Ultrasonic sensor.
-     * @param wantedDistance The distance to fire from.
-     */
-    public void ultraShooting(Ultrasonic sensor, double wantedDistance) {
-        
-        sensor.setAutomaticMode(true);
-        
-        
-        double distanceAway = sensor.getRangeMM();
-        
-        if(wantedDistance == distanceAway) {
-            SmartDashboard.putString("Ready to fire?", "Yeah, fire that ball!");
-        }
-        else {
-            SmartDashboard.putString("Ready to fire?", "Nope");
-        }
-    }
-    
-    
+   
     
    /**
     * Controller Mapping

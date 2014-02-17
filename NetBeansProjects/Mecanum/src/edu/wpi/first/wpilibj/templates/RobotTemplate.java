@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
@@ -48,11 +47,13 @@ public class RobotTemplate extends SimpleRobot {
     Thread launcherThread1;
     SolenoidClick launcherRun2;
     Thread launcherThread2;
+    UltrasonicApproval approvalRun;
+    Thread approvalThread;
     Relay launcherRelay;
     DigitalInput launcherSwitch;
     Victor motorOne;
     Victor motorTwo;
-    //Ultrasonic sonic1;    
+    Ultrasonic sonic1;    
     
     
 
@@ -74,7 +75,9 @@ public class RobotTemplate extends SimpleRobot {
         launcherThread2 = new Thread(launcherRun2);
         launcherRelay = new Relay(4);
         launcherSwitch = new DigitalInput(5);
-        //sonic1 = new Ultrasonic(1,1);
+        sonic1 = new Ultrasonic(1,1);
+        approvalRun = new UltrasonicApproval(sonic1, 5000.0);
+        approvalThread = new Thread(approvalRun);
         motorOne = new Victor(5);
         motorTwo = new Victor(6);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
@@ -113,6 +116,7 @@ public class RobotTemplate extends SimpleRobot {
         airThread.start(); // starts automatic compressor switching in parallel
         //launcherThread2.start();
         launcherThread2.start();
+        approvalThread.start();
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(true);
            double xMovement = buffer(1,moveStick,true,0.18,-0.18);
@@ -131,6 +135,7 @@ public class RobotTemplate extends SimpleRobot {
         airRun.stop(); // stops automatic switching.
         //launcherRun1.stop();
         launcherRun2.stop();
+        approvalRun.stop();
         
     }    
     
@@ -254,33 +259,7 @@ public class RobotTemplate extends SimpleRobot {
         }
     }
     
-    /**
-     * Tells you if you're ready to fire.
-     * @param sensor The Ultrasonic sensor.
-     * @param wantedDistance The distance to fire from.
-     */
-    public void ultraShooting(Ultrasonic sensor, double wantedDistance) {
-        
-        sensor.setAutomaticMode(true);
-        
-        for(int i = 0; i <= 10; i++) {
-           double distanceAway = sensor.getRangeMM();
-           
-           if(distanceAway != wantedDistance){
-               
-           }
-        }
-        
-        
-        
-        if(wantedDistance == distanceAway) {
-            SmartDashboard.putString("Ready to fire?", "Yeah, fire that ball!");
-        }
-        else {
-            SmartDashboard.putString("Ready to fire?","Nope.");
-        }
-        
-    }
+    
    
     /**
     * Controller Mapping
