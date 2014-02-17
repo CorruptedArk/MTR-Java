@@ -263,8 +263,15 @@ public class RobotTemplate extends SimpleRobot {
         
         sensor.setAutomaticMode(true);
         
+        for(int i = 0; i <= 10; i++) {
+           double distanceAway = sensor.getRangeMM();
+           
+           if(distanceAway != wantedDistance){
+               
+           }
+        }
         
-        double distanceAway = sensor.getRangeMM();
+        
         
         if(wantedDistance == distanceAway) {
             SmartDashboard.putString("Ready to fire?", "Yeah, fire that ball!");
