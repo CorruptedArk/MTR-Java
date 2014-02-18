@@ -34,15 +34,15 @@ public class UltrasonicApproval implements Runnable {
         while(running){
             double sum = 0.0;
             for(int i = 0; i < distances.length; i++) {
-               distances[i] = (sensor.getVoltage()/4.8828);
+               distances[i] = (sensor.getVoltage()/0.0048828);
                sum = sum + distances[i];
                Timer.delay(0.5);
             }
             
             double average = sum / distances.length;
             
-            double lowTolerance = wantedDistance - 500.0;
-            double highTolerance = wantedDistance + 500.0;
+            double lowTolerance = wantedDistance - 5.0;
+            double highTolerance = wantedDistance + 5.0;
             
             if(lowTolerance < average && average < highTolerance){
                 SmartDashboard.putString("Ready to fire?", "Yeah, fire that ball!");

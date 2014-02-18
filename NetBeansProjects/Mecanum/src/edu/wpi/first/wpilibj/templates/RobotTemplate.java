@@ -94,30 +94,18 @@ public class RobotTemplate extends SimpleRobot {
         Timer.delay(2.0);
         myDrive.mecanumDrive_Cartesian(0.0, 0.0, 1.00, 0.0);
         Timer.delay(8.0);
-        myDrive.mecanumDrive_Cartesian(1.00, 0.0, 0.0, 0.0);
-        Timer.delay(3.0);
-        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
-        Timer.delay(2.0);
-        myDrive.mecanumDrive_Cartesian(1.00, 0.0, 0.0, 0.0);
-        Timer.delay(3.0);
-        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
-        Timer.delay(2.0);
-        myDrive.mecanumDrive_Cartesian(1.00, 0.0, 0.0, 0.0);
-        Timer.delay(3.0);
-        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
-        Timer.delay(2.0);
-        myDrive.mecanumDrive_Cartesian(-1.00, 0.0, 0.0, 0.0);
-        Timer.delay(3.0);
-        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
-        Timer.delay(2.0);
-        myDrive.mecanumDrive_Cartesian(-1.0, 0.0, 0.0, 0.0);
-        Timer.delay(3.0);
-        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
-        Timer.delay(2.0);
-        myDrive.mecanumDrive_Cartesian(-1.00, 0.0, 0.0, 0.0);
-        Timer.delay(3.0);
-        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
-        Timer.delay(2.0);
+        for(int i=0; i<3; i++) {
+            myDrive.mecanumDrive_Cartesian(1.00, 0.0, 0.0, 0.0);
+            Timer.delay(3.0);
+            myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
+            Timer.delay(2.0);
+        }
+        for(int j=0; j<3; j++) {   
+            myDrive.mecanumDrive_Cartesian(-1.00, 0.0, 0.0, 0.0);
+            Timer.delay(3.0);
+            myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
+            Timer.delay(2.0);
+        }
         
     
     }
