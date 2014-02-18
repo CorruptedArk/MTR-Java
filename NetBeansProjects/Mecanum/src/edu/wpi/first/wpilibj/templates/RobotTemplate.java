@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.AnalogChannel;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
@@ -53,7 +54,7 @@ public class RobotTemplate extends SimpleRobot {
     DigitalInput launcherSwitch;
     Victor motorOne;
     Victor motorTwo;
-    Ultrasonic sonic1;    
+    AnalogChannel sonic1;   
     
     
 
@@ -75,8 +76,8 @@ public class RobotTemplate extends SimpleRobot {
         launcherThread2 = new Thread(launcherRun2);
         launcherRelay = new Relay(4);
         launcherSwitch = new DigitalInput(5);
-        sonic1 = new Ultrasonic(1,1);
-        approvalRun = new UltrasonicApproval(sonic1, 5000.0);
+        sonic1 = new AnalogChannel(1,2);
+        //approvalRun = new UltrasonicApproval(sonic1, 5000.0);
         approvalThread = new Thread(approvalRun);
         motorOne = new Victor(5);
         motorTwo = new Victor(6);
@@ -87,18 +88,36 @@ public class RobotTemplate extends SimpleRobot {
      //This function is called once each time the robot enters autonomous mode.
     public void autonomous() {
         myDrive.setSafetyEnabled(false);  
-        s1.set(false); // sets initial s1 value
-        s2.set(true);  // sets initial s2 value
-        airThread.start(); // starts compressor switching loop in parallel.
-        myDrive.mecanumDrive_Cartesian(1.0, 0.0, 0.0, 0.0); // starts movement
-        Timer.delay(3.0); // delays input for 3 seconds
-        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0); // stops movement
-        s1.set(true); // switches s1 value
-        s2.set(false); // switches s2 value
-        Timer.delay(2.0); // delays input for 2 seconds
-        s1.set(false); // switches s1 value
-        s2.set(true); // switches s2 value
-        airRun.stop(); // ends compressor switching loop 
+        myDrive.mecanumDrive_Cartesian(0.0, 1.00, 0.0, 0.0);
+        Timer.delay(10.0);
+        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
+        Timer.delay(2.0);
+        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 1.00, 0.0);
+        Timer.delay(8.0);
+        myDrive.mecanumDrive_Cartesian(1.00, 0.0, 0.0, 0.0);
+        Timer.delay(3.0);
+        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
+        Timer.delay(2.0);
+        myDrive.mecanumDrive_Cartesian(1.00, 0.0, 0.0, 0.0);
+        Timer.delay(3.0);
+        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
+        Timer.delay(2.0);
+        myDrive.mecanumDrive_Cartesian(1.00, 0.0, 0.0, 0.0);
+        Timer.delay(3.0);
+        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
+        Timer.delay(2.0);
+        myDrive.mecanumDrive_Cartesian(-1.00, 0.0, 0.0, 0.0);
+        Timer.delay(3.0);
+        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
+        Timer.delay(2.0);
+        myDrive.mecanumDrive_Cartesian(-1.0, 0.0, 0.0, 0.0);
+        Timer.delay(3.0);
+        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
+        Timer.delay(2.0);
+        myDrive.mecanumDrive_Cartesian(-1.00, 0.0, 0.0, 0.0);
+        Timer.delay(3.0);
+        myDrive.mecanumDrive_Cartesian(0.0, 0.0, 0.0, 0.0);
+        Timer.delay(2.0);
         
     
     }
@@ -116,26 +135,26 @@ public class RobotTemplate extends SimpleRobot {
         airThread.start(); // starts automatic compressor switching in parallel
         //launcherThread2.start();
         launcherThread2.start();
-        approvalThread.start();
+        //approvalThread.start();
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(true);
            double xMovement = buffer(1,moveStick,true,0.18,-0.18);
            double yMovement = buffer(2,moveStick,true,0.18,-0.18);
            double twist = buffer(4,moveStick,true,0.18,-0.18);
-           //myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
-           relayControl(launcherRelay, launcherSwitch);
-           motorOne.set(buffer(3,moveStick,false,1.0,-0.18));
-           motorTwo.set(buffer(3,moveStick,true,1.0,-0.18));
+           myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
+           //relayControl(launcherRelay, launcherSwitch);
+           //motorOne.set(buffer(3,moveStick,false,1.0,-0.18));
+           //motorTwo.set(buffer(3,moveStick,true,1.0,-0.18));
            //solenoidToggle(1,2,moveStick,s1,s2);
            //solenoidToggle(3,4,moveStick,s3,s4);
-           
+           SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828)+"cm");
           
            Timer.delay(0.01);
         }
         airRun.stop(); // stops automatic switching.
         //launcherRun1.stop();
         launcherRun2.stop();
-        approvalRun.stop();
+        //approvalRun.stop();
         
     }    
     
@@ -246,10 +265,10 @@ public class RobotTemplate extends SimpleRobot {
      * @param sonicPing The ultrasonic sensor.
      * @param pullBack The distance to pull back.
      */
-    public void relayControl(Relay relayName, Ultrasonic sonicPing, double pullBack) {
+    public void relayControl(Relay relayName, AnalogChannel sonicPing, double pullBack) {
         
-        sonicPing.setAutomaticMode(true);
-        double pulledBack = sonicPing.getRangeMM();
+        
+        double pulledBack = (sonicPing.getVoltage()/4.9)/1024;
         
         if(pulledBack != pullBack){
             relayName.set(Relay.Value.kForward);

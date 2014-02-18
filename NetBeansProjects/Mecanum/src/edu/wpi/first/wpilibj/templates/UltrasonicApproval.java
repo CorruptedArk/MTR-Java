@@ -6,7 +6,7 @@
 
 package edu.wpi.first.wpilibj.templates;
 
-import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -18,23 +18,23 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class UltrasonicApproval implements Runnable {
     
-    private final Ultrasonic sensor;
+    private final AnalogChannel sensor;
     private final double wantedDistance;
     
     private static boolean running = true;
     
-    public UltrasonicApproval(Ultrasonic sensor, double wantedDistance) {
+    public UltrasonicApproval(AnalogChannel sensor, double wantedDistance) {
         this.sensor = sensor;
         this.wantedDistance = wantedDistance;
     }
     
     public void run(){
-        sensor.setAutomaticMode(true);
+        
         double[] distances = new double[5];
         while(running){
             double sum = 0.0;
             for(int i = 0; i < distances.length; i++) {
-               distances[i] = sensor.getRangeMM();
+               distances[i] = (sensor.getVoltage()/4.8828);
                sum = sum + distances[i];
                Timer.delay(0.5);
             }
@@ -55,7 +55,7 @@ public class UltrasonicApproval implements Runnable {
     
     public void stop(){
         running = false;
-        sensor.setAutomaticMode(false);
+        
     }
     
     
