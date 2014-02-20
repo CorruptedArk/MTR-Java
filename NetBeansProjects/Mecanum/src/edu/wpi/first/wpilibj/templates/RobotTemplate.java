@@ -75,7 +75,7 @@ public class RobotTemplate extends SimpleRobot {
         launcherRun2 = new SolenoidClick(1,moveStick,s3,s4,"button");
         launcherThread2 = new Thread(launcherRun2);
         launcherRelay = new Relay(4);
-        launcherSwitch = new DigitalInput(5);
+//        launcherSwitch = new DigitalInput(5);
         sonic1 = new AnalogChannel(1,2);
         //approvalRun = new UltrasonicApproval(sonic1, 5000.0);
         approvalThread = new Thread(approvalRun);
@@ -135,7 +135,7 @@ public class RobotTemplate extends SimpleRobot {
            //motorTwo.set(buffer(3,moveStick,true,1.0,-0.18));
            //solenoidToggle(1,2,moveStick,s1,s2);
            //solenoidToggle(3,4,moveStick,s3,s4);
-           SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828)+"cm");
+           SmartDashboard.putString("Distance", (sonic1.getVoltage()/4.8828)+"cm");
           
            Timer.delay(0.01);
         }

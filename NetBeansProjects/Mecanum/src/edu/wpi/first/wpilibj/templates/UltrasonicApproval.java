@@ -34,7 +34,7 @@ public class UltrasonicApproval implements Runnable {
         while(running){
             double sum = 0.0;
             for(int i = 0; i < distances.length; i++) {
-               distances[i] = (sensor.getVoltage()/0.0048828);
+               distances[i] = (sensor.getVoltage()/4.8828125);
                sum = sum + distances[i];
                Timer.delay(0.5);
             }
