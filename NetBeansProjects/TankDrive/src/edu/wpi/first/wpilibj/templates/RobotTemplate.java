@@ -241,7 +241,7 @@ public class RobotTemplate extends SimpleRobot {
     }
     
     /**
-     * This runs the winch with an Ultrasonic sensor.
+     * This runs the winch with an AnalogChannel sensor.
      * @param relayName The relay spike.
      * @param sonicPing The ultrasonic sensor.
      * @param pullBack  The distance to pull back.
