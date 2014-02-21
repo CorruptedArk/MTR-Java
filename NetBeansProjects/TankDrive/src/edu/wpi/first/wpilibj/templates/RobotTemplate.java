@@ -44,14 +44,14 @@ public class RobotTemplate extends SimpleRobot {
     Joystick moveStick;
     AirRunnable airRun;
     Thread airThread;
-    SolenoidClick launcherRun1;
+    LauncherControl launcherRun1;
     Thread launcherThread1;
-    SolenoidClick launcherRun2;
-    Thread launcherThread2;
     UltrasonicApproval approvalRun;
     Thread approvalThread;
-    Relay launcherRelay;
-    DigitalInput launcherSwitch;
+    Relay raiseRelay;
+    DigitalInput launcherSwitch1;
+    DigitalInput launcherSwitch2;
+    DigitalInput raiseSwitch1;
     Victor motorOne;
     Victor motorTwo;
     AnalogChannel sonic1;
@@ -71,17 +71,17 @@ public class RobotTemplate extends SimpleRobot {
         s4 = new Solenoid(4);
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
-        launcherRun1 = new SolenoidClick(1,moveStick,s1,s2,"button");
-        launcherThread1 = new Thread(launcherRun1);
-        launcherRun2 = new SolenoidClick(1,moveStick,s3,s4,"button");
-        launcherThread2 = new Thread(launcherRun2);
-        launcherRelay = new Relay(4);
-        launcherSwitch = new DigitalInput(5);
+        raiseRelay = new Relay(4);
+        launcherSwitch1 = new DigitalInput(1);
+        launcherSwitch2 = new DigitalInput(2);
+        raiseSwitch1 = new DigitalInput(3);
         sonic1 = new AnalogChannel(1,2);
         approvalRun = new UltrasonicApproval(sonic1, 5000.0);
         approvalThread = new Thread(approvalRun);
         motorOne = new Victor(5);
         motorTwo = new Victor(6);
+        launcherRun1 = new LauncherControl(launcherSwitch1,launcherSwitch2,motorOne,moveStick,1);
+        launcherThread1 = new Thread(launcherRun1);
         
         
     }
@@ -112,30 +112,28 @@ public class RobotTemplate extends SimpleRobot {
     public void operatorControl() {
         //s1.set(false);
         //s2.set(true);
-        s3.set(true);
-        s4.set(false);
+        //s3.set(true);
+        //s4.set(false);
         airThread.start(); // starts automatic compressor switching in parallel
         //launcherThread1.start();
-        launcherThread2.start();
-        approvalThread.start();
+        //approvalThread.start();
         while(isOperatorControl() && isEnabled()) {
             myDrive.setSafetyEnabled(true);
             double leftMovement = buffer(2,moveStick,true,0.18,-0.18);
             double rightMovement = buffer(5,moveStick,true,0.18,-0.18);
-            //myDrive.tankDrive(leftMovement, rightMovement);
-            relayControl(launcherRelay, launcherSwitch);
-            motorOne.set(buffer(3,moveStick,false,1.0,-0.18));
-            motorTwo.set(buffer(3,moveStick,true,1.0,-0.18));
+            myDrive.tankDrive(leftMovement, rightMovement);
+            //relayControl(raiseRelay, raiseSwitch1);
+            //motorOne.set(buffer(3,moveStick,false,1.0,-0.18));
+            //motorTwo.set(buffer(3,moveStick,true,1.0,-0.18));
             //solenoidToggle(1,2,moveStick,s1,s2);
             //solenoidToggle(3,4,moveStick,s3,s4);
-            SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828)+"cm");
+            SmartDashboard.putString("Distance", (sonic1.getVoltage()/4.8828)+"cm");
             
             Timer.delay(0.01);
         }
         airRun.stop(); // stops automatic switching
         //launcher1.stop();
-        launcherRun2.stop();
-        approvalRun.stop();
+        //approvalRun.stop();
         
     }
     
@@ -248,7 +246,7 @@ public class RobotTemplate extends SimpleRobot {
      */
     public void relayControl(Relay relayName, AnalogChannel sonicPing, double pullBack) {
         
-        double pulledBack = sonicPing.getVoltage()/0.0048828;
+        double pulledBack = sonicPing.getVoltage()/4.8828;
         
         if(pulledBack != pullBack){
             relayName.set(Relay.Value.kForward);

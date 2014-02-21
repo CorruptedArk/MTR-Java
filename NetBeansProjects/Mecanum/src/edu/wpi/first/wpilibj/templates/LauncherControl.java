@@ -34,7 +34,7 @@ public class LauncherControl implements Runnable {
      * @param joystick The joystick to used to initiate the firing sequence.
      * @param button The button to fire with.
      */
-    public LauncherControl(AnalogChannel switch1, AnalogChannel switch2, Victor pivot, Joystick joystick, int button) {
+    public LauncherControl(DigitalInput switch1, DigitalInput switch2, Victor pivot, Joystick joystick, int button) {
         this.switch1 = switch1;
         this.switch2 = switch2;
         this.pivot = pivot;
@@ -46,14 +46,14 @@ public class LauncherControl implements Runnable {
         while(running) {
             boolean pressed = joystick.getRawButton(button);
             if(pressed) {
-                boolean sensor1State = analSensor1.getVoltage()/0.0048828 >= 12.0;
-                while(sensor1State){
-                    sensor1State = analSensor1.getVoltage()/0.0048828 >= 12.0;
+                boolean switch1State = switch1.get();
+                while(switch1State){
+                    switch1State = switch1.get();
                     pivot.set(1.0);
                 }
                 pivot.set(-1.0);
-                boolean sensor2State = analSensor2.getVoltage()/0.0048828 >= 12.0;
-                while(sensor2State) {
+                boolean switch2State = switch2.get();
+                while(!switch2State) {
                     pivot.set(-0.5);
                 }
                 pivot.set(0.5);
