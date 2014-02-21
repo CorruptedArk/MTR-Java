@@ -70,10 +70,10 @@ public class RobotTemplate extends SimpleRobot {
         s4 = new Solenoid(4);     
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
-        raiseRelay = new Relay(4);
-        launcherSwitch1 = new DigitalInput(1);
-        launcherSwitch2 = new DigitalInput(2);
-        raiseSwitch1 = new DigitalInput(3);
+        raiseRelay = new Relay(2);
+        launcherSwitch1 = new DigitalInput(2);
+        launcherSwitch2 = new DigitalInput(3);
+        raiseSwitch1 = new DigitalInput(4);
         sonic1 = new AnalogChannel(1,2);
         approvalRun = new UltrasonicApproval(sonic1, 5000.0);
         approvalThread = new Thread(approvalRun);
@@ -128,14 +128,16 @@ public class RobotTemplate extends SimpleRobot {
            double xMovement = buffer(1,moveStick,true,0.18,-0.18);
            double yMovement = buffer(2,moveStick,true,0.18,-0.18);
            double twist = buffer(4,moveStick,true,0.18,-0.18);
-           myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
+           //myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
            //relayControl(raiseRelay, raiseSwitch1);
-           //motorOne.set(buffer(3,moveStick,false,1.0,-0.18));
-           //motorTwo.set(buffer(3,moveStick,true,1.0,-0.18));
+           motorOne.set(buffer(3,moveStick,true,0.10,-0.10));
+           motorTwo.set(buffer(3,moveStick,false,0.10,-0.10));
            //solenoidToggle(1,2,moveStick,s1,s2);
            //solenoidToggle(3,4,moveStick,s3,s4);
-           SmartDashboard.putString("Distance", (sonic1.getVoltage()/4.8828)+"cm");
-          
+           //SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
+           SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
+           SmartDashboard.putBoolean("Switch 2", launcherSwitch2.get());
+           
            Timer.delay(0.01);
         }
         airRun.stop(); // stops automatic switching.
