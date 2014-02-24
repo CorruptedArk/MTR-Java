@@ -71,9 +71,9 @@ public class RobotTemplate extends SimpleRobot {
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
         raiseRelay = new Relay(2);
-        launcherSwitch1 = new DigitalInput(2);
-        launcherSwitch2 = new DigitalInput(3);
-        raiseSwitch1 = new DigitalInput(4);
+        launcherSwitch1 = new DigitalInput(3);
+        launcherSwitch2 = new DigitalInput(4);
+        raiseSwitch1 = new DigitalInput(5);
         sonic1 = new AnalogChannel(1,2);
         approvalRun = new UltrasonicApproval(sonic1, 5000.0);
         approvalThread = new Thread(approvalRun);
@@ -129,12 +129,12 @@ public class RobotTemplate extends SimpleRobot {
            double yMovement = buffer(2,moveStick,true,0.18,-0.18);
            double twist = buffer(4,moveStick,true,0.18,-0.18);
            //myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
-           //relayControl(raiseRelay, raiseSwitch1);
+           relayControl(raiseRelay, launcherSwitch2);
            motorOne.set(buffer(3,moveStick,true,0.10,-0.10));
            motorTwo.set(buffer(3,moveStick,false,0.10,-0.10));
            //solenoidToggle(1,2,moveStick,s1,s2);
            //solenoidToggle(3,4,moveStick,s3,s4);
-           //SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
+           SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
            SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
            SmartDashboard.putBoolean("Switch 2", launcherSwitch2.get());
            
@@ -239,10 +239,10 @@ public class RobotTemplate extends SimpleRobot {
     
     public void relayControl(Relay relayName, DigitalInput switchName ){
         
-        if(!switchName.get()) {
+        if(switchName.get()) {
             relayName.set(Relay.Value.kForward);
         }
-        if(switchName.get()) {
+        if(!switchName.get()) {
             relayName.set(Relay.Value.kOff);
         }
     }
