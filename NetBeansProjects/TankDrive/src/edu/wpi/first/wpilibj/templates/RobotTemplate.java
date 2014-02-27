@@ -127,7 +127,7 @@ public class RobotTemplate extends SimpleRobot {
             //motorTwo.set(buffer(3,moveStick,true,1.0,-0.18));
             //solenoidToggle(1,2,moveStick,s1,s2);
             //solenoidToggle(3,4,moveStick,s3,s4);
-            SmartDashboard.putString("Distance", (sonic1.getVoltage()/4.8828)+"cm");
+            SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
             
             Timer.delay(0.01);
         }
