@@ -71,7 +71,7 @@ public class SolenoidClick implements Runnable{
         if(inputType.equalsIgnoreCase("button")) {
             buttonToggle();
         }
-        if(inputType.equalsIgnoreCase("axis")) {
+        else if(inputType.equalsIgnoreCase("axis")) {
             axisToggle();
         }
 

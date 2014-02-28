@@ -54,6 +54,7 @@ public class LauncherControl implements Runnable {
                 pivot.set(-1.0);
                 boolean switch2State = switch2.get();
                 while(!switch2State) {
+                    switch2State = switch2.get();
                     pivot.set(-0.5);
                 }
                 pivot.set(0.5);

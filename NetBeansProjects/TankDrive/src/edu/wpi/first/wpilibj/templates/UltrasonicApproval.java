@@ -23,17 +23,23 @@ public class UltrasonicApproval implements Runnable {
     
     private static boolean running = true;
     
+    /**
+     * Constructor 
+     * @param sensor the sensor to be used
+     * @param wantedDistance the distance to fire from
+     */
     public UltrasonicApproval(AnalogChannel sensor, double wantedDistance) {
         this.sensor = sensor;
         this.wantedDistance = wantedDistance;
     }
     
     public void run(){
+        
         double[] distances = new double[5];
         while(running){
             double sum = 0.0;
             for(int i = 0; i < distances.length; i++) {
-               distances[i] = (sensor.getAverageVoltage()/4.8828);
+               distances[i] = (sensor.getVoltage()/0.0048828125);
                sum = sum + distances[i];
                Timer.delay(0.5);
             }
@@ -54,6 +60,7 @@ public class UltrasonicApproval implements Runnable {
     
     public void stop(){
         running = false;
+        
     }
     
     

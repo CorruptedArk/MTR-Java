@@ -71,10 +71,10 @@ public class RobotTemplate extends SimpleRobot {
         s4 = new Solenoid(4);
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
-        raiseRelay = new Relay(4);
-        launcherSwitch1 = new DigitalInput(1);
-        launcherSwitch2 = new DigitalInput(2);
-        raiseSwitch1 = new DigitalInput(3);
+        raiseRelay = new Relay(2);
+        launcherSwitch1 = new DigitalInput(3);
+        launcherSwitch2 = new DigitalInput(4);
+        raiseSwitch1 = new DigitalInput(5);
         sonic1 = new AnalogChannel(1,2);
         approvalRun = new UltrasonicApproval(sonic1, 5000.0);
         approvalThread = new Thread(approvalRun);
@@ -122,12 +122,14 @@ public class RobotTemplate extends SimpleRobot {
             double leftMovement = buffer(2,moveStick,true,0.18,-0.18);
             double rightMovement = buffer(5,moveStick,true,0.18,-0.18);
             myDrive.tankDrive(leftMovement, rightMovement);
-            //relayControl(raiseRelay, raiseSwitch1);
-            //motorOne.set(buffer(3,moveStick,false,1.0,-0.18));
-            //motorTwo.set(buffer(3,moveStick,true,1.0,-0.18));
+            relayControl(raiseRelay, launcherSwitch2);
+            motorOne.set(buffer(3,moveStick,true,0.10,-0.10));
+            motorTwo.set(buffer(3,moveStick,false,0.10,-0.10));
             //solenoidToggle(1,2,moveStick,s1,s2);
             //solenoidToggle(3,4,moveStick,s3,s4);
             SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
+            SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
+            SmartDashboard.putBoolean("Switch 2", launcherSwitch2.get());
             
             Timer.delay(0.01);
         }
@@ -167,7 +169,7 @@ public class RobotTemplate extends SimpleRobot {
             if(inverted) {
                 moveOut = -moveIn;
             }
-            if(!inverted) {
+            else if(!inverted) {
                 moveOut = moveIn;
             }
         }
@@ -194,7 +196,7 @@ public class RobotTemplate extends SimpleRobot {
         solenoid1.set(true);
         solenoid2.set(false);
        }
-       if (pressedOff) {
+       else if (pressedOff) {
         solenoid1.set(false);
         solenoid2.set(true);
        }
@@ -230,10 +232,10 @@ public class RobotTemplate extends SimpleRobot {
     
     public void relayControl(Relay relayName, DigitalInput switchName){
         
-        if(!switchName.get()) {
+        if(switchName.get()) {
             relayName.set(Relay.Value.kForward);
         }
-        if(switchName.get()) {
+        else if(!switchName.get()) {
             relayName.set(Relay.Value.kOff);
         }
     }
@@ -251,7 +253,7 @@ public class RobotTemplate extends SimpleRobot {
         if(pulledBack != pullBack){
             relayName.set(Relay.Value.kForward);
         }
-        if(pulledBack == pullBack){
+        else if(pulledBack == pullBack){
             relayName.set(Relay.Value.kOff);
         }
     }

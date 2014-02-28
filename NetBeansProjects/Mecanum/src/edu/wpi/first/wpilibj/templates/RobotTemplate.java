@@ -177,7 +177,7 @@ public class RobotTemplate extends SimpleRobot {
             if(inverted){
                 moveOut = -moveIn;
             }
-            if(!inverted){ 
+            else if(!inverted){ 
                 moveOut = moveIn;
             }    
         }
@@ -204,7 +204,7 @@ public class RobotTemplate extends SimpleRobot {
         solenoid1.set(true);
         solenoid2.set(false);
        }
-       if (pressedOff) {
+       else if (pressedOff) {
         solenoid1.set(false);
         solenoid2.set(true);
        }
@@ -242,7 +242,7 @@ public class RobotTemplate extends SimpleRobot {
         if(switchName.get()) {
             relayName.set(Relay.Value.kForward);
         }
-        if(!switchName.get()) {
+        else if(!switchName.get()) {
             relayName.set(Relay.Value.kOff);
         }
     }
@@ -256,12 +256,12 @@ public class RobotTemplate extends SimpleRobot {
     public void relayControl(Relay relayName, AnalogChannel sonicPing, double pullBack) {
         
         
-        double pulledBack = (sonicPing.getVoltage()/4.8828);
+        double pulledBack = (sonicPing.getVoltage()/0.0048828125);
         
         if(pulledBack != pullBack){
             relayName.set(Relay.Value.kForward);
         }
-        if(pulledBack == pullBack){
+        else if(pulledBack == pullBack){
             relayName.set(Relay.Value.kOff);
         }
     }
