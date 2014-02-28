@@ -9,13 +9,21 @@ package edu.wpi.first.wpilibj.templates;
 import edu.wpi.first.wpilibj.Compressor;
 
 /**
- *
+ *A Runnable class to toggle the compressor on and off in parallel.
  * @author Noah
  */
 public class AirRunnable implements Runnable {
-    Compressor airCompressor = new Compressor(1,1);
+    private final Compressor airCompressor;
    
     private static boolean running = true;
+    
+/**
+ * This constructor passes the needed Compressor object.
+ * @param airCompressor The Compressor object.
+ */   
+    public AirRunnable(Compressor airCompressor) {
+        this.airCompressor = airCompressor;
+    }
     
     public void run() {
        while(running){
