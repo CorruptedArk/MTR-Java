@@ -124,7 +124,7 @@ public class RobotTemplate extends SimpleRobot {
         //launcherThread1.start();
         //approvalThread.start();
         while (isOperatorControl() && isEnabled()) {
-           myDrive.setSafetyEnabled(true);
+           myDrive.setSafetyEnabled(false);
            double xMovement = buffer(1,moveStick,true,0.18,-0.18);
            double yMovement = buffer(2,moveStick,true,0.18,-0.18);
            double twist = buffer(4,moveStick,true,0.18,-0.18);
@@ -137,6 +137,9 @@ public class RobotTemplate extends SimpleRobot {
            SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
            SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
            SmartDashboard.putBoolean("Switch 2", launcherSwitch2.get());
+           SmartDashboard.putNumber("Trigger data", buffer(3,moveStick,true,0.10,-0.10));
+           SmartDashboard.putNumber("Motor 1", motorOne.get());
+           SmartDashboard.putNumber("Motor 2", motorTwo.get());
            
            Timer.delay(0.01);
         }
