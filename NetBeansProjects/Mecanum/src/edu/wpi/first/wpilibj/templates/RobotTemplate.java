@@ -70,7 +70,7 @@ public class RobotTemplate extends SimpleRobot {
         s4 = new Solenoid(4);     
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
-        raiseRelay = new Relay(2);
+        raiseRelay = new Relay(2, Relay.Direction.kBoth);
         launcherSwitch1 = new DigitalInput(3);
         launcherSwitch2 = new DigitalInput(4);
         raiseSwitch1 = new DigitalInput(5);
@@ -120,8 +120,11 @@ public class RobotTemplate extends SimpleRobot {
         //s2.set(true);
         //s3.set(true);
         //s4.set(false);
+        airThread = new Thread(airRun);
         airThread.start(); // starts automatic compressor switching in parallel
+        //launcherThread1 = new Thread(launcherRun1);
         //launcherThread1.start();
+        //approvalThread = new Thread(approvalRun);
         //approvalThread.start();
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(false);
@@ -129,7 +132,7 @@ public class RobotTemplate extends SimpleRobot {
            double yMovement = buffer(2,moveStick,true,0.18,-0.18);
            double twist = buffer(4,moveStick,true,0.18,-0.18);
            //myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
-           relayControl(raiseRelay, launcherSwitch2);
+           relayControl(raiseRelay, launcherSwitch1, launcherSwitch2);
            motorOne.set(buffer(3,moveStick,true,0.10,-0.10));
            motorTwo.set(buffer(3,moveStick,false,0.10,-0.10));
            //solenoidToggle(1,2,moveStick,s1,s2);
@@ -237,15 +240,19 @@ public class RobotTemplate extends SimpleRobot {
     /**
      * This function controls operation of a relay with a switch.
      * @param relayName The Relay object.
-     * @param switchName The switch for input.
+     * @param switchName1 The switch for forward motion.
+     * @param switchName2 The switch for backward motion.
      */
     
-    public void relayControl(Relay relayName, DigitalInput switchName ){
+    public void relayControl(Relay relayName, DigitalInput switchName1, DigitalInput switchName2){
         
-        if(switchName.get()) {
+        if(switchName1.get() && !switchName2.get()) {
             relayName.set(Relay.Value.kForward);
         }
-        else if(!switchName.get()) {
+        else if(!switchName1.get() && switchName2.get()) {
+            relayName.set(Relay.Value.kReverse);
+        }
+        else{
             relayName.set(Relay.Value.kOff);
         }
     }
