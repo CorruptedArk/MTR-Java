@@ -48,6 +48,8 @@ public class RobotTemplate extends SimpleRobot {
     Thread launcherThread1;
     UltrasonicApproval approvalRun;
     Thread approvalThread;
+    SolenoidClick solenoidControl1;
+    Thread solenoidThread1;
     Relay raiseRelay;
     DigitalInput launcherSwitch1;
     DigitalInput launcherSwitch2;
@@ -55,6 +57,7 @@ public class RobotTemplate extends SimpleRobot {
     Victor motorOne;
     Victor motorTwo;
     AnalogChannel sonic1;   
+    
     
     
 
@@ -81,6 +84,8 @@ public class RobotTemplate extends SimpleRobot {
         motorTwo = new Victor(6);
         launcherRun1 = new LauncherControl(launcherSwitch1,launcherSwitch2,motorOne,moveStick,1);
         launcherThread1 = new Thread(launcherRun1);
+        solenoidControl1 = new SolenoidClick(1,moveStick,s1,s2,"button");
+        solenoidThread1 = new Thread(solenoidControl1);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
     }
@@ -116,12 +121,15 @@ public class RobotTemplate extends SimpleRobot {
      */
     public void operatorControl() {
         
-        //s1.set(false);
-        //s2.set(true);
+        s1.set(false);
+        s2.set(true);
         //s3.set(true);
         //s4.set(false);
+        airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
         airThread.start(); // starts automatic compressor switching in parallel
+        solenoidThread1 = new Thread(solenoidControl1);
+        solenoidThread1.start();
         //launcherThread1 = new Thread(launcherRun1);
         //launcherThread1.start();
         //approvalThread = new Thread(approvalRun);
@@ -133,8 +141,8 @@ public class RobotTemplate extends SimpleRobot {
            double twist = buffer(4,moveStick,true,0.18,-0.18);
            //myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
            relayControl(raiseRelay, launcherSwitch1, launcherSwitch2);
-           motorOne.set(buffer(3,moveStick,true,0.10,-0.10));
-           motorTwo.set(buffer(3,moveStick,false,0.10,-0.10));
+           motorOne.set(buffer(3,moveStick,true,0,0));
+           motorTwo.set(buffer(3,moveStick,false,0,0));
            //solenoidToggle(1,2,moveStick,s1,s2);
            //solenoidToggle(3,4,moveStick,s3,s4);
            SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
@@ -147,6 +155,7 @@ public class RobotTemplate extends SimpleRobot {
            Timer.delay(0.01);
         }
         airRun.stop(); // stops automatic switching.
+        solenoidControl1.stop();
         //launcherRun1.stop();
         //approvalRun.stop();
         

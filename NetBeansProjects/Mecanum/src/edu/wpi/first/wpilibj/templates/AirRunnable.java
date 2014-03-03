@@ -7,6 +7,7 @@
 package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Relay;
 
 /**
  *A Runnable class to toggle the compressor on and off in parallel.
@@ -27,17 +28,18 @@ public class AirRunnable implements Runnable {
     
     public void run() {
        while(running){
-            if (airCompressor.getPressureSwitchValue()) {
-                airCompressor.stop();
+           
+           if (airCompressor.getPressureSwitchValue()) {
+                airCompressor.setRelayValue(Relay.Value.kOff);
             }
             else {
-                airCompressor.start();
+                airCompressor.setRelayValue(Relay.Value.kForward);
             }
        }
     }
     
     public void stop() {
         running = false;
-        airCompressor.stop();
+        airCompressor.setRelayValue(Relay.Value.kOff);
     }
 }
