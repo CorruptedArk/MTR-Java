@@ -84,7 +84,7 @@ public class RobotTemplate extends SimpleRobot {
         motorTwo = new Victor(6);
         launcherRun1 = new LauncherControl(launcherSwitch1,launcherSwitch2,motorOne,moveStick,1);
         launcherThread1 = new Thread(launcherRun1);
-        solenoidControl1 = new SolenoidClick(1,moveStick,s1,s2,"button");
+        solenoidControl1 = new SolenoidClick(3,moveStick,s1,s2,"axis");
         solenoidThread1 = new Thread(solenoidControl1);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
@@ -140,14 +140,14 @@ public class RobotTemplate extends SimpleRobot {
            double twist = buffer(4,moveStick,true,0.18,-0.18);
            //myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
            relayControl(raiseRelay, launcherSwitch1, launcherSwitch2);
-           motorOne.set(buffer(3,moveStick,true,0,0));
-           motorTwo.set(buffer(3,moveStick,false,0,0));
+           //motorOne.set(buffer(3,moveStick,true,0,0));
+           //motorTwo.set(buffer(3,moveStick,false,0,0));
            //solenoidToggle(1,2,moveStick,s1,s2);
            //solenoidToggle(3,4,moveStick,s3,s4);
            SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
            SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
            SmartDashboard.putBoolean("Switch 2", launcherSwitch2.get());
-           SmartDashboard.putNumber("Trigger data", buffer(3,moveStick,true,0.10,-0.10));
+           SmartDashboard.putNumber("Trigger data", buffer(3,moveStick,true,0,0));
            SmartDashboard.putNumber("Motor 1", motorOne.get());
            SmartDashboard.putNumber("Motor 2", motorTwo.get());
            

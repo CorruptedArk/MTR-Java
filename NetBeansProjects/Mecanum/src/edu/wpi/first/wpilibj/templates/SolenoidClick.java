@@ -8,6 +8,7 @@ package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  *A Runnable class that toggles solenoids in parallel with a single button.
@@ -21,6 +22,8 @@ public class SolenoidClick implements Runnable{
     private final String inputType;
     private final double highMargin;
     private final double lowMargin;
+    private final DigitalInput switch1;
+    
     
     private static boolean running = true;
     
@@ -41,6 +44,7 @@ public class SolenoidClick implements Runnable{
         this.inputType = inputType;
         this.highMargin = 0.4;
         this.lowMargin = -0.4;
+        this.switch1 = new DigitalInput(10);
     }
     
     /**
@@ -64,6 +68,15 @@ public class SolenoidClick implements Runnable{
         this.lowMargin = lowMargin;
     }
     
+    public SolenoidClick(DigitalInput switch1, Solenoid solenoid1, Solenoid solenoid2) {
+        this.switch1 = switch1;
+        this.solenoid1 = solenoid1;
+        this.solenoid2 = solenoid2;
+        this.inputType = "switch";
+        this.toggler = 1;
+        this.joystickName = new Joystick(10);
+        this.highMargin = 
+    }
   
     
     public void run() {
@@ -73,6 +86,9 @@ public class SolenoidClick implements Runnable{
         }
         else if(inputType.equalsIgnoreCase("axis")) {
             axisToggle();
+        }
+        else if(inputType.equalsIgnoreCase("switch")) {
+            switchToggle();
         }
 
    }     
@@ -118,6 +134,10 @@ public class SolenoidClick implements Runnable{
                 }
             }
         }
+    }
+    
+    public void switchToggle() {
+        
     }
     
      public void stop() {
