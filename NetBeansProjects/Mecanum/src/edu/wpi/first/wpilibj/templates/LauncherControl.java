@@ -43,6 +43,7 @@ public class LauncherControl implements Runnable {
     }
     
     public void run(){
+        running = true;
         while(running) {
             boolean pressed = joystick.getRawButton(button);
             if(pressed) {

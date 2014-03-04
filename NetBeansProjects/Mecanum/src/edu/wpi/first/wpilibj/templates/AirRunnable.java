@@ -27,7 +27,8 @@ public class AirRunnable implements Runnable {
     }
     
     public void run() {
-       while(running){
+       running = true;
+        while(running){
            
            if (airCompressor.getPressureSwitchValue()) {
                 airCompressor.setRelayValue(Relay.Value.kOff);

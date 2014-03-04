@@ -48,6 +48,8 @@ public class RobotTemplate extends SimpleRobot {
     Thread launcherThread1;
     UltrasonicApproval approvalRun;
     Thread approvalThread;
+    SolenoidClick solenoidControl1;
+    Thread solenoidThread1;
     Relay raiseRelay;
     DigitalInput launcherSwitch1;
     DigitalInput launcherSwitch2;
@@ -82,6 +84,8 @@ public class RobotTemplate extends SimpleRobot {
         motorTwo = new Victor(6);
         launcherRun1 = new LauncherControl(launcherSwitch1,launcherSwitch2,motorOne,moveStick,1);
         launcherThread1 = new Thread(launcherRun1);
+        solenoidControl1 = new SolenoidClick(1,moveStick,s1,s2,"button");
+        solenoidThread1 = new Thread(solenoidControl1);
         
         
     }
@@ -116,6 +120,8 @@ public class RobotTemplate extends SimpleRobot {
         //s4.set(false);
         airThread = new Thread(airRun);
         airThread.start(); // starts automatic compressor switching in parallel
+        solenoidThread1 = new Thread(solenoidControl1);
+        solenoidThread1.start();
         //launcherThread1 = new Thread(launcherRun1);
         //launcherThread1.start();
         //approvalThread = new Thread(approvalRun);
@@ -137,6 +143,7 @@ public class RobotTemplate extends SimpleRobot {
             Timer.delay(0.01);
         }
         airRun.stop(); // stops automatic switching
+        solenoidControl1.stop();
         //launcher1.stop();
         //approvalRun.stop();
         

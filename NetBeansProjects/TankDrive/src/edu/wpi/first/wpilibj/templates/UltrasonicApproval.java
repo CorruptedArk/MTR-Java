@@ -24,7 +24,7 @@ public class UltrasonicApproval implements Runnable {
     private static boolean running = true;
     
     /**
-     * Constructor 
+     * Constructor
      * @param sensor the sensor to be used
      * @param wantedDistance the distance to fire from
      */
@@ -34,7 +34,7 @@ public class UltrasonicApproval implements Runnable {
     }
     
     public void run(){
-        
+        running = true;
         double[] distances = new double[5];
         while(running){
             double sum = 0.0;

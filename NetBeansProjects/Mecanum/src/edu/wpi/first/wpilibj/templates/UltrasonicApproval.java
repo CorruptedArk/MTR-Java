@@ -34,7 +34,7 @@ public class UltrasonicApproval implements Runnable {
     }
     
     public void run(){
-        
+        running = true;
         double[] distances = new double[5];
         while(running){
             double sum = 0.0;

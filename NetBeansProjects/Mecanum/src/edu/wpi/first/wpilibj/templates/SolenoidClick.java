@@ -67,7 +67,7 @@ public class SolenoidClick implements Runnable{
   
     
     public void run() {
-      
+        running = true;
         if(inputType.equalsIgnoreCase("button")) {
             buttonToggle();
         }

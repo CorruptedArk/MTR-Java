@@ -125,7 +125,6 @@ public class RobotTemplate extends SimpleRobot {
         s2.set(true);
         //s3.set(true);
         //s4.set(false);
-        airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
         airThread.start(); // starts automatic compressor switching in parallel
         solenoidThread1 = new Thread(solenoidControl1);
