@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the SimpleRobot
@@ -84,7 +85,7 @@ public class RobotTemplate extends SimpleRobot {
         motorTwo = new Victor(6);
         launcherRun1 = new LauncherControl(launcherSwitch1,launcherSwitch2,motorOne,moveStick,1);
         launcherThread1 = new Thread(launcherRun1);
-        solenoidControl1 = new SolenoidClick(3,moveStick,s1,s2,"axis");
+        solenoidControl1 = new SolenoidClick(launcherSwitch1,s1,s2);
         solenoidThread1 = new Thread(solenoidControl1);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
@@ -284,9 +285,44 @@ public class RobotTemplate extends SimpleRobot {
         }
     }
     
-    
-   
     /**
+     * This controls a relay with either axis input or two buttons.
+     * When using an axis, forward and back should be the same value.
+     * @param relayName The Relay that is being controlled.
+     * @param joystickName The joystick for input.
+     * @param forward The id for the forward button or one half of an axis.
+     * @param back The id for the back button or one half of an axis.
+     * @param type Is the input from a button or axis?
+     * @exception IllegalArgumentException() If type is invalid. 
+     */
+    public void relayControl(Relay relayName, Joystick joystickName, int forward, int back, String type) {
+        boolean pressedForward = false;
+        boolean pressedBack = false;
+        
+        if(type.equalsIgnoreCase("button")) {
+           pressedForward = joystickName.getRawButton(forward);
+           pressedBack = joystickName.getRawButton(back);
+        }
+        else if(type.equalsIgnoreCase("axis")) {
+           pressedForward = joystickName.getRawAxis(forward) <= -0.40;
+           pressedBack = joystickName.getRawAxis(back) >= 0.40;
+        }
+        else {
+            throw new IllegalArgumentException(type + " is not a valid type of input.");
+        }
+        
+        if(pressedForward && !pressedBack) {
+            relayName.set(Relay.Value.kForward);
+        }
+        else if(!pressedForward && pressedBack) {
+            relayName.set(Relay.Value.kReverse);
+        }
+        else {
+            relayName.set(Relay.Value.kOff);
+        }
+    }
+   
+   /**
     * Controller Mapping
     1: A
     2: B

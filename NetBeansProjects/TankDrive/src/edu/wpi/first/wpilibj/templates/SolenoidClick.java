@@ -8,9 +8,10 @@ package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
- *A Runnable class that toggles solenoids in parallel with a single button.
+ *A Runnable class that toggles solenoids in parallel with a single input.
  * @author Noah
  */
 public class SolenoidClick implements Runnable{
@@ -21,6 +22,7 @@ public class SolenoidClick implements Runnable{
     private final String inputType;
     private final double highMargin;
     private final double lowMargin;
+    private final DigitalInput switch1;
     
     private static boolean running = true;
     
@@ -41,6 +43,7 @@ public class SolenoidClick implements Runnable{
         this.inputType = inputType;
         this.highMargin = 0.4;
         this.lowMargin = -0.4;
+        this.switch1 = new DigitalInput(10);
     }
     
     /**
@@ -62,8 +65,26 @@ public class SolenoidClick implements Runnable{
         this.inputType = inputType;
         this.highMargin = highMargin;
         this.lowMargin = lowMargin;
+        this.switch1 = new DigitalInput(10);
     }
     
+    /**
+     * Constructor.
+     * Uses a switch to toggle the solenoid.
+     * @param switch1 The DigitalInput switch.
+     * @param solenoid1 The first solenoid.
+     * @param solenoid2 The second solenoid.
+     */
+    public SolenoidClick(DigitalInput switch1, Solenoid solenoid1, Solenoid solenoid2) {
+        this.switch1 = switch1;
+        this.solenoid1 = solenoid1;
+        this.solenoid2 = solenoid2;
+        this.inputType = "switch";
+        this.toggler = 1;
+        this.joystickName = new Joystick(10);
+        this.highMargin = 0.4;
+        this.lowMargin = -0.4;
+    }
   
     
     public void run() {
@@ -74,7 +95,14 @@ public class SolenoidClick implements Runnable{
         else if(inputType.equalsIgnoreCase("axis")) {
             axisToggle();
         }
-
+        else if(inputType.equalsIgnoreCase("switch")) {
+            switchToggle();
+        }
+        else {
+            throw new IllegalArgumentException(inputType + " is not a valid type of input.");
+        }
+        
+        
    }     
     
     /**
@@ -118,6 +146,26 @@ public class SolenoidClick implements Runnable{
                 }
             }
         }
+    }
+    
+    /**
+     * Toggles solenoids with a switch.
+     */
+    public void switchToggle() {
+        while(running) {
+            boolean pressed = switch1.get();
+            
+            if(pressed) {
+                solenoid1.set(!solenoid1.get());
+                solenoid2.set(!solenoid2.get());
+                while(pressed) {
+                    pressed = switch1.get();
+                    solenoid1.set(solenoid1.get());
+                    solenoid2.set(solenoid2.get());
+                }
+            }
+        }
+        
     }
     
      public void stop() {
