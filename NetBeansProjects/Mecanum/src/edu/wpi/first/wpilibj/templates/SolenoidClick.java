@@ -35,7 +35,7 @@ public class SolenoidClick implements Runnable{
      * @param solenoid2 The second solenoid
      * @param inputType Axis or Button?
      */
-    public SolenoidClick(int toggler, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2, String inputType) {
+    public SolenoidClick(int toggler, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2, String inputType, DigitalInput dummy) {
         this.toggler = toggler;
         this.joystickName = joystickName;
         this.solenoid1 = solenoid1;
@@ -43,7 +43,7 @@ public class SolenoidClick implements Runnable{
         this.inputType = inputType;
         this.highMargin = 0.4;
         this.lowMargin = -0.4;
-        this.switch1 = new DigitalInput(10);
+        this.switch1 = dummy;
     }
     
     /**
@@ -57,7 +57,7 @@ public class SolenoidClick implements Runnable{
      * @param highMargin The high margin for the axis
      * @param lowMargin The low margin for the axis
      */ 
-    public SolenoidClick(int toggler, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2, String inputType, double highMargin, double lowMargin) {
+    public SolenoidClick(int toggler, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2, String inputType, double highMargin, double lowMargin, DigitalInput dummy) {
         this.toggler = toggler;
         this.joystickName = joystickName;
         this.solenoid1 = solenoid1;
@@ -65,7 +65,7 @@ public class SolenoidClick implements Runnable{
         this.inputType = inputType;
         this.highMargin = highMargin;
         this.lowMargin = lowMargin;
-        this.switch1 = new DigitalInput(10);
+        this.switch1 = dummy;
     }
     
     /**
@@ -96,7 +96,7 @@ public class SolenoidClick implements Runnable{
             axisToggle();
         }
         else if(inputType.equalsIgnoreCase("switch")) {
-            switchToggle();
+            //switchToggle();
         }
         else {
             throw new IllegalArgumentException(inputType + " is not a valid type of input.");
