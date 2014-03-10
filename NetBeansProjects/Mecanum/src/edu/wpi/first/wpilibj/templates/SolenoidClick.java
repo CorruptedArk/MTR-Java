@@ -34,6 +34,7 @@ public class SolenoidClick implements Runnable{
      * @param solenoid1 The first solenoid 
      * @param solenoid2 The second solenoid
      * @param inputType Axis or Button?
+     * @param dummy A placeholder. Use a switch that doesn't exist.
      */
     public SolenoidClick(int toggler, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2, String inputType, DigitalInput dummy) {
         this.toggler = toggler;
@@ -56,6 +57,7 @@ public class SolenoidClick implements Runnable{
      * @param inputType Axis or Button?
      * @param highMargin The high margin for the axis
      * @param lowMargin The low margin for the axis
+     * @param dummy A placeholder. Use a switch that doesn't exist.
      */ 
     public SolenoidClick(int toggler, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2, String inputType, double highMargin, double lowMargin, DigitalInput dummy) {
         this.toggler = toggler;

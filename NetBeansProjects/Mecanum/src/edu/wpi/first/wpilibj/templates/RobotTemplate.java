@@ -37,21 +37,21 @@ public class RobotTemplate extends SimpleRobot {
     final int rearRight = 4;
     
     Compressor airCompressor;
-    Solenoid s1;
-    Solenoid s2;
+    Solenoid latch;
+    Solenoid notLatch;
     //Solenoid s3;
     //Solenoid s4;
-    Solenoid s5;
-    Solenoid s6;
-    Solenoid s7;
-    Solenoid s8;
+    Solenoid pull1;
+    Solenoid notPull1;
+    Solenoid pull2;
+    Solenoid notPull2;
     RobotDrive myDrive;
     Joystick moveStick;
     Joystick shootStick;
     AirRunnable airRun;
     Thread airThread;
-    LauncherControl launcherRun1;
-    Thread launcherThread1;
+    //LauncherControl launcherRun1;
+    //Thread launcherThread1;
     UltrasonicApproval approvalRun;
     Thread approvalThread;
     SolenoidClick solenoidControl1;
@@ -81,14 +81,14 @@ public class RobotTemplate extends SimpleRobot {
         moveStick = new Joystick(1);
         shootStick = new Joystick(2);
         airCompressor = new Compressor(1,1);
-        s1 = new Solenoid(1); //1 little
-        s2 = new Solenoid(2);
+        latch = new Solenoid(1); //1 little
+        notLatch = new Solenoid(2);
         //s3 = new Solenoid(3); //2 pickup
         //s4 = new Solenoid(4);
-        s5 = new Solenoid(6); //3 pull
-        s6 = new Solenoid(5);
-        s7 = new Solenoid(7); //4 pull
-        s8 = new Solenoid(8);
+        pull1 = new Solenoid(6); //3 pull
+        notPull1 = new Solenoid(5);
+        pull2 = new Solenoid(7); //4 pull
+        notPull2 = new Solenoid(8);
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
         //pickupRelay = new Relay(2, Relay.Direction.kBoth);
@@ -101,29 +101,19 @@ public class RobotTemplate extends SimpleRobot {
         approvalThread = new Thread(approvalRun);
         motorOne = new Victor(5);
         motorTwo = new Victor(6);
-        //launcherRun1 = new LauncherControl(launcherSwitch1,launcherSwitch2,motorOne,moveStick,1);
-        //launcherThread1 = new Thread(launcherRun1);
-        solenoidControl1 = new SolenoidClick(3,shootStick,s1,s2,"button",dummy); //little
-        //solenoidControl2 = new SolenoidClick(1,shootStick,s3,s4,"button",dummy); //pickup
-        solenoidControl3 = new SolenoidClick(2,shootStick,s5,s6,"button",dummy); //pull
-        solenoidControl4 = new SolenoidClick(2,shootStick,s7,s8,"button",dummy); //pull
+        solenoidControl1 = new SolenoidClick(3,shootStick,latch,notLatch,"button",dummy); //little
+        solenoidControl3 = new SolenoidClick(2,shootStick,pull1,notPull1,"button",dummy); //pull
+        solenoidControl4 = new SolenoidClick(2,shootStick,pull2,notPull2,"button",dummy); //pull
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
     }
     
      //This function is called once each time the robot enters autonomous mode.
     public void autonomous() {
-        //airThread = new Thread(airRun);
-        //airThread.start();
         myDrive.setSafetyEnabled(false);
         myDrive.mecanumDrive_Cartesian(0.0,1.0,0.0,0.0);
         Timer.delay(1.0);
         myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
-        //s3.set(false);
-        //s4.set(true);
-        //s1.set(false);
-        //s2.set(true);
-        //airRun.stop();
         
     }
 
@@ -133,14 +123,14 @@ public class RobotTemplate extends SimpleRobot {
      */
     public void operatorControl() {
         
-        s1.set(false);
-        s2.set(true);
+        latch.set(false);
+        notLatch.set(true);
         //s3.set(false);
         //s4.set(true);
-        s5.set(false);
-        s6.set(true);
-        s7.set(false);
-        s8.set(true);
+        pull1.set(false);
+        notPull1.set(true);
+        pull2.set(false);
+        notPull2.set(true);
         airThread = new Thread(airRun);
         airThread.start(); // starts automatic compressor switching in parallel
         solenoidThread1 = new Thread(solenoidControl1);
