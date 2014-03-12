@@ -31,11 +31,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class RobotTemplate extends SimpleRobot {
-    final int frontLeft = 2;
-    final int rearLeft = 3;
-    final int frontRight = 1;
-    final int rearRight = 4;
-    
+    Victor frontLeft;
+    Victor rearLeft;
+    Victor frontRight;
+    Victor rearRight;
     Compressor airCompressor;
     Solenoid latch;
     Solenoid notLatch;
@@ -77,6 +76,10 @@ public class RobotTemplate extends SimpleRobot {
 
 //This initializes the motors and controls.
     public void robotInit() {
+        frontLeft = new Victor(2);
+        rearLeft = new Victor(3);
+        frontRight = new Victor(1);
+        rearRight = new Victor(4);
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
         shootStick = new Joystick(2);
@@ -114,7 +117,6 @@ public class RobotTemplate extends SimpleRobot {
         myDrive.mecanumDrive_Cartesian(0.0,1.0,0.0,0.0);
         Timer.delay(1.0);
         myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
-        
     }
 
     
