@@ -151,8 +151,8 @@ public class RobotTemplate extends SimpleRobot {
             double rightMovement = buffer(5,moveStick,true,0.10,-0.10);
             myDrive.tankDrive(leftMovement, rightMovement);
             
-            motorOne.set(buffer(3,moveStick,true,0.18,-0.18));
-            motorTwo.set(buffer(3,moveStick,false,0.18,-0.18));
+            motorOne.set(buffer(3,moveStick,true,0.10,-0.10));
+            motorTwo.set(buffer(3,moveStick,false,0.10,-0.10));
             //relayControl(pickupRelay,shootStick,3,3,"axis");
             SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
             //SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
