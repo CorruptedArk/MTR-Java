@@ -88,7 +88,10 @@ public class SolenoidClick implements Runnable{
         this.lowMargin = -0.4;
     }
   
-    
+    /**
+     * Is called once when a SolenoidClick object is started by a Thread object.
+     * @exception IllegalArgumentException If inputType is invalid.
+     */
     public void run() {
         running = true;
         if(inputType.equalsIgnoreCase("button")) {
@@ -103,9 +106,7 @@ public class SolenoidClick implements Runnable{
         else {
             throw new IllegalArgumentException(inputType + " is not a valid type of input.");
         }
-        
-        
-   }     
+    }     
     
     /**
      * Toggles solenoids with a button.
