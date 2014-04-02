@@ -49,8 +49,6 @@ public class RobotTemplate extends SimpleRobot {
     Joystick shootStick;
     AirRunnable airRun;
     Thread airThread;
-    //LauncherControl launcherRun1;
-    //Thread launcherThread1;
     UltrasonicApproval approvalRun;
     Thread approvalThread;
     SolenoidClick solenoidControl1;
@@ -61,11 +59,12 @@ public class RobotTemplate extends SimpleRobot {
     Thread solenoidThread3;
     SolenoidClick solenoidControl4;
     Thread solenoidThread4;
-    //Relay pickupRelay;
-    //DigitalInput launcherSwitch1;
-    //DigitalInput launcherSwitch2;
+    Relay pickupRelay1;
+    Relay pickupRelay2;
     //DigitalInput raiseSwitch1;
     DigitalInput dummy;
+    DigitalInput inside;
+    DigitalInput outside;
     Victor motorOne;
     Victor motorTwo;
     AnalogChannel sonic1;   
@@ -77,8 +76,8 @@ public class RobotTemplate extends SimpleRobot {
 //This initializes the motors and controls.
     public void robotInit() {
         frontLeft = new Victor(2);
-        rearLeft = new Victor(3);
-        frontRight = new Victor(1);
+        rearLeft = new Victor(1);
+        frontRight = new Victor(3);
         rearRight = new Victor(4);
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
@@ -94,10 +93,10 @@ public class RobotTemplate extends SimpleRobot {
         notPull2 = new Solenoid(8);
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
-        //pickupRelay = new Relay(2, Relay.Direction.kBoth);
-        //launcherSwitch1 = new DigitalInput(3);
-        //launcherSwitch2 = new DigitalInput(4);
-        dummy = new DigitalInput(10);
+        pickupRelay1 = new Relay(2, Relay.Direction.kBoth);
+        pickupRelay2 = new Relay(3, Relay.Direction.kBoth);
+        inside = new DigitalInput(1);
+        outside = new DigitalInput(2);
         //raiseSwitch1 = new DigitalInput(5);
         sonic1 = new AnalogChannel(1,2);
         approvalRun = new UltrasonicApproval(sonic1, 5000.0);
@@ -151,7 +150,8 @@ public class RobotTemplate extends SimpleRobot {
            double yMovement = buffer(2,moveStick,true,0.18,-0.18);
            double twist = buffer(4,moveStick,true,0.18,-0.18);
            myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
-           //relayControl(pickupRelay,shootStick,3,3,"axis");
+           relayControl(pickupRelay1,shootStick,3,3,"axis",inside,outside);
+           relayControl(pickupRelay2,shootStick,3,3,"axis",inside,outside);
            SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
            //SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
            //SmartDashboard.putBoolean("Switch 2", launcherSwitch2.get());
@@ -180,15 +180,15 @@ public class RobotTemplate extends SimpleRobot {
     
   
     
-	/**
-	* This function buffers the joystickName.getRawAxis() input.
-        * @param axisNum The ID for the axis in moveStick.
-        * @param joystickName The Joystick that input is coming from. 
-        * @param inverted Is it flipped?
-        * @param highMargin The high margin of the buffer.
-        * @param lowMargin The low margin of the buffer.
-        * @return moveOut - The buffered axis data from joystickName.getRawAxis().
-	**/
+    /**
+     * This function buffers the joystickName.getRawAxis() input.
+     * @param axisNum The ID for the axis in moveStick.
+     * @param joystickName The Joystick that input is coming from. 
+     * @param inverted Is it flipped?
+     * @param highMargin The high margin of the buffer.
+     * @param lowMargin The low margin of the buffer.
+     * @return moveOut - The buffered axis data from joystickName.getRawAxis().
+     **/
     public double buffer(int axisNum,Joystick joystickName, boolean inverted, double highMargin, double lowMargin) {
         double moveIn = joystickName.getRawAxis(axisNum);
         double moveOut;
@@ -325,6 +325,52 @@ public class RobotTemplate extends SimpleRobot {
         }
         else if(!pressedForward && pressedBack) {
             relayName.set(Relay.Value.kReverse);
+        }
+        else {
+            relayName.set(Relay.Value.kOff);
+        }
+    }
+    
+    
+     /**
+     * Relay control with buttons and limit switches.
+     * @param relayName The relay under control.
+     * @param joystickName The joystick controlling it.
+     * @param forward The id for the forward button or one half of an axis.
+     * @param back The id for the back button or one half of an axis.
+     * @param type Is the input from a button or axis?
+     * @param inside The switch at the inside limit.
+     * @param outside The switch on the outside limit.
+     * @exception IllegalArgumentException If type is invalid.
+     */
+    public void relayControl(Relay relayName, Joystick joystickName, int forward, 
+             int back, String type , DigitalInput inside, DigitalInput outside) {
+        boolean pressedForward = false;
+        boolean pressedBack = false;
+        
+        if(type.equalsIgnoreCase("button")) {
+           pressedForward = joystickName.getRawButton(forward);
+           pressedBack = joystickName.getRawButton(back);
+        }
+        else if(type.equalsIgnoreCase("axis")) {
+           pressedForward = joystickName.getRawAxis(forward) <= -0.40;
+           pressedBack = joystickName.getRawAxis(back) >= 0.40;
+        }
+        else {
+            throw new IllegalArgumentException(type + " is not a valid type of input.");
+        }
+        
+        if(pressedForward && !pressedBack && !outside.get()) {
+            relayName.set(Relay.Value.kForward);
+        }
+        else if(pressedForward && !pressedBack && outside.get()) {
+            relayName.set(Relay.Value.kOff);
+        }
+        else if(!pressedForward && pressedBack && !inside.get()) {
+            relayName.set(Relay.Value.kReverse);
+        }
+        else if(!pressedForward && pressedBack && inside.get()) {
+            relayName.set(Relay.Value.kOff);
         }
         else {
             relayName.set(Relay.Value.kOff);
