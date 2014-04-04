@@ -65,8 +65,8 @@ public class RobotTemplate extends SimpleRobot {
     DigitalInput dummy;
     DigitalInput inside;
     DigitalInput outside;
-    Victor motorOne;
-    Victor motorTwo;
+    //Victor motorOne;
+    //Victor motorTwo;
     AnalogChannel sonic1;   
     
     
@@ -83,14 +83,14 @@ public class RobotTemplate extends SimpleRobot {
         moveStick = new Joystick(1);
         shootStick = new Joystick(2);
         airCompressor = new Compressor(1,1);
-        latch = new Solenoid(1); //1 little
-        notLatch = new Solenoid(2);
+        latch = new Solenoid(5); //1 little
+        notLatch = new Solenoid(6);
         //s3 = new Solenoid(3); //2 pickup
         //s4 = new Solenoid(4);
-        pull1 = new Solenoid(6); //3 pull
-        notPull1 = new Solenoid(5);
-        pull2 = new Solenoid(7); //4 pull
-        notPull2 = new Solenoid(8);
+        pull1 = new Solenoid(2); //3 pull
+        notPull1 = new Solenoid(1);
+        pull2 = new Solenoid(4); //4 pull
+        notPull2 = new Solenoid(3);
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
         pickupRelay1 = new Relay(2, Relay.Direction.kBoth);
@@ -101,8 +101,8 @@ public class RobotTemplate extends SimpleRobot {
         sonic1 = new AnalogChannel(1,2);
         approvalRun = new UltrasonicApproval(sonic1, 5000.0);
         approvalThread = new Thread(approvalRun);
-        motorOne = new Victor(5);
-        motorTwo = new Victor(6);
+        //motorOne = new Victor(5);
+        //motorTwo = new Victor(6);
         solenoidControl1 = new SolenoidClick(3,shootStick,latch,notLatch,"button",dummy); //little
         solenoidControl3 = new SolenoidClick(2,shootStick,pull1,notPull1,"button",dummy); //pull
         solenoidControl4 = new SolenoidClick(2,shootStick,pull2,notPull2,"button",dummy); //pull
@@ -156,8 +156,8 @@ public class RobotTemplate extends SimpleRobot {
            //SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
            //SmartDashboard.putBoolean("Switch 2", launcherSwitch2.get());
            SmartDashboard.putNumber("Trigger data", buffer(3,shootStick,true,0,0));
-           SmartDashboard.putNumber("Motor 1", motorOne.get());
-           SmartDashboard.putNumber("Motor 2", motorTwo.get());
+           //SmartDashboard.putNumber("Motor 1", motorOne.get());
+           //SmartDashboard.putNumber("Motor 2", motorTwo.get());
            
            Timer.delay(0.01);
         }

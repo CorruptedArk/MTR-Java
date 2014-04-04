@@ -64,8 +64,8 @@ public class RobotTemplate extends SimpleRobot {
     DigitalInput dummy;
     DigitalInput inside;
     DigitalInput outside;
-    Victor motorOne;
-    Victor motorTwo;
+    //Victor motorOne;
+    //Victor motorTwo;
     AnalogChannel sonic1;
     
     
@@ -101,8 +101,8 @@ public class RobotTemplate extends SimpleRobot {
         sonic1 = new AnalogChannel(1,2);
         approvalRun = new UltrasonicApproval(sonic1, 5000.0);
         approvalThread = new Thread(approvalRun);
-        motorOne = new Victor(5);
-        motorTwo = new Victor(6);
+        //motorOne = new Victor(5);
+        //motorTwo = new Victor(6);
         solenoidControl1 = new SolenoidClick(3,shootStick,latch,notLatch,"button",dummy);//little
         solenoidControl3 = new SolenoidClick(2,shootStick,pull1,notPull1,"button",dummy);//pull
         solenoidControl4 = new SolenoidClick(2,shootStick,pull2,notPull2,"button",dummy);//pull
@@ -151,16 +151,16 @@ public class RobotTemplate extends SimpleRobot {
             double rightMovement = buffer(5,moveStick,true,0.10,-0.10);
             myDrive.tankDrive(leftMovement, rightMovement);
             
-            motorOne.set(buffer(3,moveStick,true,0.10,-0.10));
-            motorTwo.set(buffer(3,moveStick,false,0.10,-0.10));
+            //motorOne.set(buffer(3,moveStick,true,0.10,-0.10));
+            //motorTwo.set(buffer(3,moveStick,false,0.10,-0.10));
             relayControl(pickupRelay1,shootStick,3,3,"axis", inside, outside);
             relayControl(pickupRelay2,shootStick,3,3,"axis", inside, outside);
             SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
             //SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
             //SmartDashboard.putBoolean("Switch 2", launcherSwitch2.get());
             SmartDashboard.putNumber("Trigger data", buffer(3,moveStick,true,0,0));
-            SmartDashboard.putNumber("Motor 1", motorOne.get());
-            SmartDashboard.putNumber("Motor 2", motorTwo.get());
+            //SmartDashboard.putNumber("Motor 1", motorOne.get());
+            //SmartDashboard.putNumber("Motor 2", motorTwo.get());
             
             Timer.delay(0.01);
         }
