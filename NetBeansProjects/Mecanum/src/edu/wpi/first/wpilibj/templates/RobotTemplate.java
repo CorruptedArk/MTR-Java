@@ -75,14 +75,14 @@ public class RobotTemplate extends SimpleRobot {
 
 //This initializes the motors and controls.
     public void robotInit() {
-        frontLeft = new Victor(2);
+        frontLeft = new Victor(5);
         rearLeft = new Victor(1);
         frontRight = new Victor(3);
-        rearRight = new Victor(4);
+        rearRight = new Victor(6);
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
         shootStick = new Joystick(2);
-        airCompressor = new Compressor(1,1);
+        airCompressor = new Compressor(1,3);
         latch = new Solenoid(5); //1 little
         notLatch = new Solenoid(6);
         //s3 = new Solenoid(3); //2 pickup
@@ -93,19 +93,19 @@ public class RobotTemplate extends SimpleRobot {
         notPull2 = new Solenoid(3);
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
-        pickupRelay1 = new Relay(2, Relay.Direction.kBoth);
-        pickupRelay2 = new Relay(3, Relay.Direction.kBoth);
-        inside = new DigitalInput(1);
-        outside = new DigitalInput(2);
+        pickupRelay1 = new Relay(4, Relay.Direction.kBoth);
+        pickupRelay2 = new Relay(2, Relay.Direction.kBoth);
+        inside = new DigitalInput(2);
+        outside = new DigitalInput(3);
         //raiseSwitch1 = new DigitalInput(5);
         sonic1 = new AnalogChannel(1,2);
         approvalRun = new UltrasonicApproval(sonic1, 5000.0);
         approvalThread = new Thread(approvalRun);
         //motorOne = new Victor(5);
         //motorTwo = new Victor(6);
-        solenoidControl1 = new SolenoidClick(3,shootStick,latch,notLatch,"button",dummy); //little
-        solenoidControl3 = new SolenoidClick(2,shootStick,pull1,notPull1,"button",dummy); //pull
-        solenoidControl4 = new SolenoidClick(2,shootStick,pull2,notPull2,"button",dummy); //pull
+        solenoidControl1 = new SolenoidClick(3,moveStick,latch,notLatch,"button",dummy); //little
+        solenoidControl3 = new SolenoidClick(2,moveStick,pull1,notPull1,"button",dummy); //pull
+        solenoidControl4 = new SolenoidClick(2,moveStick,pull2,notPull2,"button",dummy); //pull
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
     }
@@ -113,9 +113,21 @@ public class RobotTemplate extends SimpleRobot {
      //This function is called once each time the robot enters autonomous mode.
     public void autonomous() {
         myDrive.setSafetyEnabled(false);
-        myDrive.mecanumDrive_Cartesian(0.0,1.0,0.0,0.0);
-        Timer.delay(1.0);
-        myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
+        airThread = new Thread(airRun);
+        airThread.start();
+        latch.set(true);
+        notLatch.set(false);
+        pull1.set(true);
+        notPull1.set(false);
+        pull2.set(true);
+        notPull2.set(false);
+        //myDrive.mecanumDrive_Cartesian(0.0,-0.5,0.0,0.0);
+        Timer.delay(1.5);
+        //myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
+        Timer.delay(6.5);
+        latch.set(false);
+        notLatch.set(true);
+        airRun.stop();
     }
 
     
@@ -146,12 +158,12 @@ public class RobotTemplate extends SimpleRobot {
         //approvalThread.start();
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(true); 
-           double xMovement = buffer(1,moveStick,true,0.18,-0.18);
-           double yMovement = buffer(2,moveStick,true,0.18,-0.18);
+           double xMovement = buffer(1,moveStick,false,0.18,-0.18);
+           double yMovement = buffer(2,moveStick,false,0.18,-0.18);
            double twist = buffer(4,moveStick,true,0.18,-0.18);
            myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
-           relayControl(pickupRelay1,shootStick,3,3,"axis",inside,outside);
-           relayControl(pickupRelay2,shootStick,3,3,"axis",inside,outside);
+           relayControl(pickupRelay1,shootStick,3,3,"axis");
+           relayControl(pickupRelay2,shootStick,3,3,"axis");
            SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
            //SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
            //SmartDashboard.putBoolean("Switch 2", launcherSwitch2.get());
