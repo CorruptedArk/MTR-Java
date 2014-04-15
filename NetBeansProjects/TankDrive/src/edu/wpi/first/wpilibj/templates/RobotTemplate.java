@@ -35,14 +35,14 @@ public class RobotTemplate extends SimpleRobot {
     Victor frontRight;
     Victor rearRight;
     Compressor airCompressor;
-    Solenoid latch;
-    Solenoid notLatch;
+    Solenoid latchExtend;
+    Solenoid latchRetract;
     //Solenoid s3;
     //Solenoid s4;
-    Solenoid pull1;
-    Solenoid notPull1;
-    Solenoid pull2;
-    Solenoid notPull2;
+    Solenoid tensionPull1;
+    Solenoid tensionPush1;
+    Solenoid tensionPull2;
+    Solenoid tensionPush2;
     RobotDrive myDrive;
     Joystick moveStick;
     Joystick shootStick;
@@ -74,26 +74,26 @@ public class RobotTemplate extends SimpleRobot {
     
     //This initializes controls and motors
     public void robotInit(){
-        frontLeft = new Victor(2);
+        frontLeft = new Victor(5);
         rearLeft = new Victor(1);
         frontRight = new Victor(3);
-        rearRight = new Victor(4);
+        rearRight = new Victor(6);
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
         shootStick = new Joystick(2);
-        airCompressor = new Compressor(1,1);
-        latch = new Solenoid(1); //1 little
-        notLatch = new Solenoid(2);
+        airCompressor = new Compressor(1,3);
+        latchExtend = new Solenoid(5); //1 little
+        latchRetract = new Solenoid(6);
         //s3 = new Solenoid(3); //2 pickup
         //s4 = new Solenoid(4);
-        pull1 = new Solenoid(6); //3 pull
-        notPull1 = new Solenoid(5);
-        pull2 = new Solenoid(7); //4 pull
-        notPull2 = new Solenoid(8);
+        tensionPull1 = new Solenoid(2); //3 pull
+        tensionPush1 = new Solenoid(1);
+        tensionPull2 = new Solenoid(4); //4 pull
+        tensionPush2 = new Solenoid(3);
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
-        pickupRelay1 = new Relay(2, Relay.Direction.kBoth);
-        pickupRelay2 = new Relay(3, Relay.Direction.kBoth);
+        pickupRelay1 = new Relay(4, Relay.Direction.kBoth);
+        pickupRelay2 = new Relay(2, Relay.Direction.kBoth);
         dummy = new DigitalInput(10);
         inside = new DigitalInput(2);
         outside = new DigitalInput(3);
@@ -103,9 +103,9 @@ public class RobotTemplate extends SimpleRobot {
         approvalThread = new Thread(approvalRun);
         //motorOne = new Victor(5);
         //motorTwo = new Victor(6);
-        solenoidControl1 = new SolenoidClick(3,shootStick,latch,notLatch,"button",dummy);//little
-        solenoidControl3 = new SolenoidClick(2,shootStick,pull1,notPull1,"button",dummy);//pull
-        solenoidControl4 = new SolenoidClick(2,shootStick,pull2,notPull2,"button",dummy);//pull
+        solenoidControl1 = new SolenoidClick(3,moveStick,latchExtend,latchRetract,"button",dummy);//little
+        solenoidControl3 = new SolenoidClick(2,moveStick,tensionPull1,tensionPush1,"button",dummy);//pull
+        solenoidControl4 = new SolenoidClick(2,moveStick,tensionPull2,tensionPush2,"button",dummy);//pull
         
         
         
@@ -125,14 +125,14 @@ public class RobotTemplate extends SimpleRobot {
      * This function is called once each time the robot enters operator control.
      */
     public void operatorControl() {
-        latch.set(false);
-        notLatch.set(true);
+        latchExtend.set(false);
+        latchRetract.set(true);
         //s3.set(false);
         //s4.set(true);
-        pull1.set(false);
-        notPull1.set(true);
-        pull2.set(false);
-        notPull2.set(true);
+        tensionPull1.set(false);
+        tensionPush1.set(true);
+        tensionPull2.set(false);
+        tensionPush2.set(true);
         airThread = new Thread(airRun);
         airThread.start(); // starts automatic compressor switching in parallel
         solenoidThread1 = new Thread(solenoidControl1);
@@ -153,8 +153,8 @@ public class RobotTemplate extends SimpleRobot {
             
             //motorOne.set(buffer(3,moveStick,true,0.10,-0.10));
             //motorTwo.set(buffer(3,moveStick,false,0.10,-0.10));
-            relayControl(pickupRelay1,shootStick,3,3,"axis", inside, outside);
-            relayControl(pickupRelay2,shootStick,3,3,"axis", inside, outside);
+            relayControl(pickupRelay1,moveStick,3,3,"axis");
+            relayControl(pickupRelay2,moveStick,3,3,"axis");
             SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
             //SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
             //SmartDashboard.putBoolean("Switch 2", launcherSwitch2.get());

@@ -36,14 +36,14 @@ public class RobotTemplate extends SimpleRobot {
     Victor frontRight;
     Victor rearRight;
     Compressor airCompressor;
-    Solenoid latch;
-    Solenoid notLatch;
+    Solenoid latchExtend;
+    Solenoid latchRetract;
     //Solenoid s3;
     //Solenoid s4;
-    Solenoid pull1;
-    Solenoid notPull1;
-    Solenoid pull2;
-    Solenoid notPull2;
+    Solenoid tensionPull1;
+    Solenoid tensionPush1;
+    Solenoid tensionPull2;
+    Solenoid tensionPush2;
     RobotDrive myDrive;
     Joystick moveStick;
     Joystick shootStick;
@@ -67,7 +67,8 @@ public class RobotTemplate extends SimpleRobot {
     DigitalInput outside;
     //Victor motorOne;
     //Victor motorTwo;
-    AnalogChannel sonic1;   
+    AnalogChannel sonic1;
+    
     
     
     
@@ -83,18 +84,19 @@ public class RobotTemplate extends SimpleRobot {
         moveStick = new Joystick(1);
         shootStick = new Joystick(2);
         airCompressor = new Compressor(1,3);
-        latch = new Solenoid(5); //1 little
-        notLatch = new Solenoid(6);
+        latchExtend = new Solenoid(5); //1 little
+        latchRetract = new Solenoid(6);
         //s3 = new Solenoid(3); //2 pickup
         //s4 = new Solenoid(4);
-        pull1 = new Solenoid(2); //3 pull
-        notPull1 = new Solenoid(1);
-        pull2 = new Solenoid(4); //4 pull
-        notPull2 = new Solenoid(3);
+        tensionPull1 = new Solenoid(2); //3 pull
+        tensionPush1 = new Solenoid(1);
+        tensionPull2 = new Solenoid(4); //4 pull
+        tensionPush2 = new Solenoid(3);
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
         pickupRelay1 = new Relay(4, Relay.Direction.kBoth);
         pickupRelay2 = new Relay(2, Relay.Direction.kBoth);
+        dummy = new DigitalInput(10);
         inside = new DigitalInput(2);
         outside = new DigitalInput(3);
         //raiseSwitch1 = new DigitalInput(5);
@@ -103,9 +105,9 @@ public class RobotTemplate extends SimpleRobot {
         approvalThread = new Thread(approvalRun);
         //motorOne = new Victor(5);
         //motorTwo = new Victor(6);
-        solenoidControl1 = new SolenoidClick(3,moveStick,latch,notLatch,"button",dummy); //little
-        solenoidControl3 = new SolenoidClick(2,moveStick,pull1,notPull1,"button",dummy); //pull
-        solenoidControl4 = new SolenoidClick(2,moveStick,pull2,notPull2,"button",dummy); //pull
+        solenoidControl1 = new SolenoidClick(3,moveStick,latchExtend,latchRetract,"button",dummy); //little
+        solenoidControl3 = new SolenoidClick(2,moveStick,tensionPull1,tensionPush1,"button",dummy); //pull
+        solenoidControl4 = new SolenoidClick(2,moveStick,tensionPull2,tensionPush2,"button",dummy); //pull
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
     }
@@ -115,18 +117,18 @@ public class RobotTemplate extends SimpleRobot {
         myDrive.setSafetyEnabled(false);
         airThread = new Thread(airRun);
         airThread.start();
-        latch.set(true);
-        notLatch.set(false);
-        pull1.set(true);
-        notPull1.set(false);
-        pull2.set(true);
-        notPull2.set(false);
-        //myDrive.mecanumDrive_Cartesian(0.0,-0.5,0.0,0.0);
+        latchExtend.set(true);
+        latchRetract.set(false);
+        tensionPull1.set(true);
+        tensionPush1.set(false);
+        tensionPull2.set(true);
+        tensionPush2.set(false);
+        //myDrive.mecanumDrive_Cartesian(0.0,-1.0,0.0,0.0);
         Timer.delay(1.5);
         //myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
         Timer.delay(6.5);
-        latch.set(false);
-        notLatch.set(true);
+        latchExtend.set(false);
+        latchRetract.set(true);
         airRun.stop();
     }
 
@@ -136,14 +138,14 @@ public class RobotTemplate extends SimpleRobot {
      */
     public void operatorControl() {
         
-        latch.set(false);
-        notLatch.set(true);
+        latchExtend.set(false);
+        latchRetract.set(true);
         //s3.set(false);
         //s4.set(true);
-        pull1.set(false);
-        notPull1.set(true);
-        pull2.set(false);
-        notPull2.set(true);
+        tensionPull1.set(false);
+        tensionPush1.set(true);
+        tensionPull2.set(false);
+        tensionPush2.set(true);
         airThread = new Thread(airRun);
         airThread.start(); // starts automatic compressor switching in parallel
         solenoidThread1 = new Thread(solenoidControl1);
@@ -162,12 +164,12 @@ public class RobotTemplate extends SimpleRobot {
            double yMovement = buffer(2,moveStick,false,0.18,-0.18);
            double twist = buffer(4,moveStick,true,0.18,-0.18);
            myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
-           relayControl(pickupRelay1,shootStick,3,3,"axis");
-           relayControl(pickupRelay2,shootStick,3,3,"axis");
+           relayControl(pickupRelay1,moveStick,3,3,"axis");
+           relayControl(pickupRelay2,moveStick,3,3,"axis");
            SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
            //SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
            //SmartDashboard.putBoolean("Switch 2", launcherSwitch2.get());
-           SmartDashboard.putNumber("Trigger data", buffer(3,shootStick,true,0,0));
+           SmartDashboard.putNumber("Trigger data", buffer(3,moveStick,true,0,0));
            //SmartDashboard.putNumber("Motor 1", motorOne.get());
            //SmartDashboard.putNumber("Motor 2", motorTwo.get());
            

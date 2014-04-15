@@ -6,21 +6,25 @@
 
 package edu.wpi.first.wpilibj.templates;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Victor;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Solenoid;
 
 /**
  * This Runnable subclass runs a polling loop waiting for controller input and
- * runs semi-autonomous code to launch the ball.
+ * runs semi-autonomous code to launch the ball. DO NOT RUN THIS IF THERE ARE 
+ * OTHER SOLENOID CONTROLS IN USE. THIS IS UNTESTED.
  * @author Noah
  */
 public class LauncherControl implements Runnable {
     
-    private final DigitalInput switch1;
-    private final DigitalInput switch2;
-    private final Victor pivot;
+    private final Solenoid latchRetract;
+    private final Solenoid latchExtend;
+    private final Solenoid tensionPull1;
+    private final Solenoid tensionPush1;
+    private final Solenoid tensionPull2;
+    private final Solenoid tensionPush2;
     private final Joystick joystick;
     private final int button;
     
@@ -28,18 +32,26 @@ public class LauncherControl implements Runnable {
     
     /**
      * Constructor
-     * @param switch1 The switch closest to the pivot.
-     * @param switch2 The switch farthest from the pivot.
-     * @param pivot The motor controlling the launcher.
      * @param joystick The joystick to used to initiate the firing sequence.
      * @param button The button to fire with.
+     * @param latchRetract The Solenoid that pulls the latch.
+     * @param latchExtend The Solenoid that pushes the latch.
+     * @param tensionPull1 The Solenoid that pulls one of the large pistons.
+     * @param tensionPush1 The Solenoid that pushes one of the large pistons.
+     * @param tensionPull2 The Solenoid that pulls the other large piston.
+     * @param tensionPush2 The SOlenoid that pushes the other large piston.
      */
-    public LauncherControl(DigitalInput switch1, DigitalInput switch2, Victor pivot, Joystick joystick, int button) {
-        this.switch1 = switch1;
-        this.switch2 = switch2;
-        this.pivot = pivot;
+    public LauncherControl(Joystick joystick, int button, Solenoid latchRetract,
+            Solenoid latchExtend, Solenoid tensionPull1, Solenoid tensionPush1, 
+            Solenoid tensionPull2, Solenoid tensionPush2) {
         this.joystick = joystick;
         this.button = button;
+        this.latchRetract = latchRetract;
+        this.latchExtend = latchExtend;
+        this.tensionPull1 = tensionPull1;
+        this.tensionPush1 = tensionPush1;
+        this.tensionPull2 = tensionPull2;
+        this.tensionPush2 = tensionPush2;
     }
     
     public void run(){
@@ -47,21 +59,20 @@ public class LauncherControl implements Runnable {
         while(running) {
             boolean pressed = joystick.getRawButton(button);
             if(pressed) {
-                boolean switch1State = switch1.get();
-                while(switch1State){
-                    switch1State = switch1.get();
-                    pivot.set(1.0);
-                }
-                pivot.set(-1.0);
-                boolean switch2State = switch2.get();
-                while(!switch2State) {
-                    switch2State = switch2.get();
-                    pivot.set(-0.5);
-                }
-                pivot.set(0.5);
-                Timer.delay(0.01);
-                pivot.set(0.0);
-                
+                latchRetract.set(false);
+                latchExtend.set(true);
+                tensionPull1.set(true);
+                tensionPush1.set(false);
+                tensionPull2.set(true);
+                tensionPush2.set(false);
+                Timer.delay(8.0);
+                latchRetract.set(true);
+                latchExtend.set(false);
+                Timer.delay(2);
+                tensionPull1.set(false);
+                tensionPush1.set(true);
+                tensionPull2.set(false);
+                tensionPush2.set(true);
             }
             
         }
@@ -70,7 +81,7 @@ public class LauncherControl implements Runnable {
     
     public void stop() {
         running = false;
-        pivot.set(0.0);
+        
     }
     
 }
