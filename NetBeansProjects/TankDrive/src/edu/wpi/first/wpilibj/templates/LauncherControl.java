@@ -28,7 +28,7 @@ public class LauncherControl implements Runnable {
     private final Joystick joystick;
     private final int button;
     
-    private static boolean running = true;
+    private volatile boolean running;
     
     /**
      * Constructor
@@ -44,6 +44,7 @@ public class LauncherControl implements Runnable {
     public LauncherControl(Joystick joystick, int button, Solenoid latchRetract,
             Solenoid latchExtend, Solenoid tensionPull1, Solenoid tensionPush1, 
             Solenoid tensionPull2, Solenoid tensionPush2) {
+        this.running = true;
         this.joystick = joystick;
         this.button = button;
         this.latchRetract = latchRetract;

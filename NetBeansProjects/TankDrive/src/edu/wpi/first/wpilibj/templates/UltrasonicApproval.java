@@ -21,7 +21,7 @@ public class UltrasonicApproval implements Runnable {
     private final AnalogChannel sensor;
     private final double wantedDistance;
     
-    private static boolean running = true;
+    private volatile boolean running;
     
     /**
      * Constructor
@@ -29,6 +29,7 @@ public class UltrasonicApproval implements Runnable {
      * @param wantedDistance the distance to fire from
      */
     public UltrasonicApproval(AnalogChannel sensor, double wantedDistance) {
+        this.running = true;
         this.sensor = sensor;
         this.wantedDistance = wantedDistance;
     }

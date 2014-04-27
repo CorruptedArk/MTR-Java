@@ -15,13 +15,14 @@ import edu.wpi.first.wpilibj.Compressor;
 public class AirRunnable implements Runnable {
     private final Compressor airCompressor;
    
-    private static boolean running = true;
+    private volatile boolean running;
     
 /**
  * This constructor passes the needed Compressor object.
  * @param airCompressor The Compressor object.
  */   
     public AirRunnable(Compressor airCompressor) {
+        this.running = true;
         this.airCompressor = airCompressor;
     }
     

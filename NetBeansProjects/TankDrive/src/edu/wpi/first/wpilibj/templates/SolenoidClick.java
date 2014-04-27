@@ -24,7 +24,7 @@ public class SolenoidClick implements Runnable{
     private final double lowMargin;
     private final DigitalInput switch1;
     
-    private static boolean running = true;
+    private volatile boolean running;
     
     /**
      * This constructor passes the needed objects to control the solenoid.
@@ -37,6 +37,7 @@ public class SolenoidClick implements Runnable{
      * @param dummy A placeholder. Use a switch that doesn't exist.
      */
     public SolenoidClick(int toggler, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2, String inputType, DigitalInput dummy) {
+        this.running = true;
         this.toggler = toggler;
         this.joystickName = joystickName;
         this.solenoid1 = solenoid1;
@@ -60,6 +61,7 @@ public class SolenoidClick implements Runnable{
      * @param dummy A placeholder. Use a switch that doesn't exist.
      */ 
     public SolenoidClick(int toggler, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2, String inputType, double highMargin, double lowMargin, DigitalInput dummy) {
+        this.running = true;
         this.toggler = toggler;
         this.joystickName = joystickName;
         this.solenoid1 = solenoid1;
@@ -78,6 +80,7 @@ public class SolenoidClick implements Runnable{
      * @param solenoid2 The second solenoid.
      */
     public SolenoidClick(DigitalInput switch1, Solenoid solenoid1, Solenoid solenoid2) {
+        this.running = true;
         this.switch1 = switch1;
         this.solenoid1 = solenoid1;
         this.solenoid2 = solenoid2;
