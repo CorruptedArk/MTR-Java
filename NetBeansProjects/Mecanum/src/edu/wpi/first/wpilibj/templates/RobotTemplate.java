@@ -35,7 +35,7 @@ public class RobotTemplate extends SimpleRobot {
     Victor rearLeft;
     Victor frontRight;
     Victor rearRight;
-    Compressor airCompressor;
+    //Compressor airCompressor;
     Solenoid latchExtend;
     Solenoid latchRetract;
     //Solenoid s3;
@@ -47,8 +47,8 @@ public class RobotTemplate extends SimpleRobot {
     RobotDrive myDrive;
     Joystick moveStick;
     Joystick shootStick;
-    AirRunnable airRun;
-    Thread airThread;
+    //AirRunnable airRun;
+    //Thread airThread;
     UltrasonicApproval approvalRun;
     Thread approvalThread;
     SolenoidClick solenoidControl1;
@@ -83,7 +83,7 @@ public class RobotTemplate extends SimpleRobot {
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
         shootStick = new Joystick(2);
-        airCompressor = new Compressor(1,3);
+        //airCompressor = new Compressor(1,3);
         latchExtend = new Solenoid(5); //1 little
         latchRetract = new Solenoid(6);
         //s3 = new Solenoid(3); //2 pickup
@@ -92,8 +92,8 @@ public class RobotTemplate extends SimpleRobot {
         tensionPush1 = new Solenoid(1);
         tensionPull2 = new Solenoid(4); //4 pull
         tensionPush2 = new Solenoid(3);
-        airRun = new AirRunnable(airCompressor);
-        airThread = new Thread(airRun);
+        //airRun = new AirRunnable(airCompressor);
+        //airThread = new Thread(airRun);
         pickupRelay1 = new Relay(4, Relay.Direction.kBoth);
         pickupRelay2 = new Relay(2, Relay.Direction.kBoth);
         dummy = new DigitalInput(10);
@@ -115,8 +115,8 @@ public class RobotTemplate extends SimpleRobot {
      //This function is called once each time the robot enters autonomous mode.
     public void autonomous() {
         myDrive.setSafetyEnabled(false);
-        airThread = new Thread(airRun);
-        airThread.start();
+        //airThread = new Thread(airRun);
+        //airThread.start();
         latchExtend.set(true);
         latchRetract.set(false);
         tensionPull1.set(true);
@@ -129,7 +129,7 @@ public class RobotTemplate extends SimpleRobot {
         Timer.delay(6.5);
         latchExtend.set(false);
         latchRetract.set(true);
-        airRun.stop();
+        //airRun.stop();
     }
 
     
@@ -146,8 +146,8 @@ public class RobotTemplate extends SimpleRobot {
         tensionPush1.set(true);
         tensionPull2.set(false);
         tensionPush2.set(true);
-        airThread = new Thread(airRun);
-        airThread.start(); // starts automatic compressor switching in parallel
+        //airThread = new Thread(airRun);
+        //airThread.start(); // starts automatic compressor switching in parallel
         solenoidThread1 = new Thread(solenoidControl1);
         solenoidThread1.start();
         //solenoidThread2 = new Thread(solenoidControl2);
@@ -175,7 +175,7 @@ public class RobotTemplate extends SimpleRobot {
            
            Timer.delay(0.01);
         }
-        airRun.stop(); // stops automatic switching.
+        //airRun.stop(); // stops automatic switching.
         solenoidControl1.stop();
         //solenoidControl2.stop();
         solenoidControl3.stop();
