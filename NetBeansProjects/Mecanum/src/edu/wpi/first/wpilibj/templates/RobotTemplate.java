@@ -77,7 +77,7 @@ public class RobotTemplate extends SimpleRobot {
 //This initializes the motors and controls.
     public void robotInit() {
         frontLeft = new Victor(8);
-        rearLeft = new Victor(10);
+        rearLeft = new Victor(6);
         frontRight = new Victor(7);
         rearRight = new Victor(9);
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
@@ -160,8 +160,8 @@ public class RobotTemplate extends SimpleRobot {
         //approvalThread.start();
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(true); 
-           double xMovement = buffer(1,moveStick,false,0.18,-0.18);
-           double yMovement = buffer(2,moveStick,false,0.18,-0.18);
+           double xMovement = buffer(1,moveStick,true,0.18,-0.18);
+           double yMovement = buffer(2,moveStick,true,0.18,-0.18);
            double twist = buffer(4,moveStick,true,0.18,-0.18);
            myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
            relayControl(pickupRelay1,moveStick,3,3,"axis");
