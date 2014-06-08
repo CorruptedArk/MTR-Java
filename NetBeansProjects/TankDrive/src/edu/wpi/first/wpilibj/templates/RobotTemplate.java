@@ -75,7 +75,7 @@ public class RobotTemplate extends SimpleRobot {
     //This initializes controls and motors
     public void robotInit(){
         frontLeft = new Victor(8);
-        rearLeft = new Victor(10);
+        rearLeft = new Victor(4);
         frontRight = new Victor(7);
         rearRight = new Victor(9);
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
