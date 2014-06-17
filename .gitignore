@@ -4,15 +4,8 @@
 *.jar
 *.war
 *.ear
-<<<<<<< HEAD
 *.MF
 *.suite
 *.metadata
 *.sym
 *.xml
-=======
-NetBeansProjects/TankDrive/build/suite/META-INF/MANIFEST.MF
-NetBeansProjects/TankDrive/build/suite/image.suite
-NetBeansProjects/TankDrive/build/suite/image.suite.metadata
-NetBeansProjects/TankDrive/build/suite/image.sym
->>>>>>> master
