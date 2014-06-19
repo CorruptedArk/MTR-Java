@@ -77,10 +77,10 @@ public class RobotTemplate extends SimpleRobot {
 
 //This initializes the motors and controls.
     public void robotInit() {
-        frontLeft = new Victor(8);
+        frontLeft = new Victor(3);
         rearLeft = new Victor(4);
-        frontRight = new Victor(7);
-        rearRight = new Victor(9);
+        frontRight = new Victor(2);
+        rearRight = new Victor(1);
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
         shootStick = new Joystick(2);
@@ -160,6 +160,7 @@ public class RobotTemplate extends SimpleRobot {
         //solenoidThread3.start();
         //solenoidThread4 = new Thread(solenoidControl4);
         //solenoidThread4.start();
+        orientationSwitcher = new DriveState(true,moveStick,1);
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
         //approvalThread = new Thread(approvalRun);
