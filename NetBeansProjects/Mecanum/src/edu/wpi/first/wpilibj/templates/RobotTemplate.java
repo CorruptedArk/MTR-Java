@@ -68,7 +68,8 @@ public class RobotTemplate extends SimpleRobot {
     //Victor motorOne;
     //Victor motorTwo;
     AnalogChannel sonic1;
-    
+    DriveState orientationSwitcher;
+    Thread orientationThread;
     
     
     
@@ -94,6 +95,8 @@ public class RobotTemplate extends SimpleRobot {
         tensionPush2 = new Solenoid(3);
         //airRun = new AirRunnable(airCompressor);
         //airThread = new Thread(airRun);
+        orientationSwitcher = new DriveState(true,moveStick,1);
+        orientationThread = new Thread(orientationSwitcher);
         pickupRelay1 = new Relay(4, Relay.Direction.kBoth);
         pickupRelay2 = new Relay(2, Relay.Direction.kBoth);
         dummy = new DigitalInput(10);
@@ -110,6 +113,7 @@ public class RobotTemplate extends SimpleRobot {
         solenoidControl4 = new SolenoidClick(2,moveStick,tensionPull2,tensionPush2,"button",dummy); //pull
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
+        
     }
     
      //This function is called once each time the robot enters autonomous mode.
@@ -156,12 +160,15 @@ public class RobotTemplate extends SimpleRobot {
         solenoidThread3.start();
         solenoidThread4 = new Thread(solenoidControl4);
         solenoidThread4.start();
+        orientationThread = new Thread(orientationSwitcher);
+        orientationThread.start();
         //approvalThread = new Thread(approvalRun);
         //approvalThread.start();
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(true); 
-           double xMovement = buffer(1,moveStick,true,0.18,-0.18);
-           double yMovement = buffer(2,moveStick,true,0.18,-0.18);
+           boolean inverted = orientationSwitcher.orientation;
+           double xMovement = buffer(1,moveStick,inverted,0.18,-0.18);
+           double yMovement = buffer(2,moveStick,inverted,0.18,-0.18);
            double twist = buffer(4,moveStick,true,0.18,-0.18);
            myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
            relayControl(pickupRelay1,moveStick,3,3,"axis");
@@ -181,6 +188,7 @@ public class RobotTemplate extends SimpleRobot {
         solenoidControl3.stop();
         solenoidControl4.stop();
         //approvalRun.stop();
+        orientationSwitcher.stop();
         
     }    
     
@@ -390,6 +398,8 @@ public class RobotTemplate extends SimpleRobot {
             relayName.set(Relay.Value.kOff);
         }
     }
+    
+    
    
    /**
     * Controller Mapping
