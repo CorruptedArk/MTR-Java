@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.Compressor;
+//import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogChannel;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
@@ -49,25 +49,25 @@ public class RobotTemplate extends SimpleRobot {
     Joystick shootStick;
     //AirRunnable airRun;
     //Thread airThread;
-    UltrasonicApproval approvalRun;
-    Thread approvalThread;
-    SolenoidClick solenoidControl1;
-    Thread solenoidThread1;
+    //UltrasonicApproval approvalRun;
+    //Thread approvalThread;
+    //SolenoidClick solenoidControl1;
+    //Thread solenoidThread1;
     //SolenoidClick solenoidControl2;
     //Thread solenoidThread2;
-    SolenoidClick solenoidControl3;
-    Thread solenoidThread3;
-    SolenoidClick solenoidControl4;
-    Thread solenoidThread4;
-    Relay pickupRelay1;
-    Relay pickupRelay2;
+    //SolenoidClick solenoidControl3;
+    //Thread solenoidThread3;
+    //SolenoidClick solenoidControl4;
+    //Thread solenoidThread4;
+    //Relay pickupRelay1;
+    //Relay pickupRelay2;
     //DigitalInput raiseSwitch1;
-    DigitalInput dummy;
-    DigitalInput inside;
-    DigitalInput outside;
+    //DigitalInput dummy;
+    //DigitalInput inside;
+    //DigitalInput outside;
     //Victor motorOne;
     //Victor motorTwo;
-    AnalogChannel sonic1;
+    //AnalogChannel sonic1;
     DriveState orientationSwitcher;
     Thread orientationThread;
     
@@ -97,20 +97,20 @@ public class RobotTemplate extends SimpleRobot {
         //airThread = new Thread(airRun);
         orientationSwitcher = new DriveState(true,moveStick,1);
         orientationThread = new Thread(orientationSwitcher);
-        pickupRelay1 = new Relay(4, Relay.Direction.kBoth);
-        pickupRelay2 = new Relay(2, Relay.Direction.kBoth);
-        dummy = new DigitalInput(10);
-        inside = new DigitalInput(2);
-        outside = new DigitalInput(3);
+        //pickupRelay1 = new Relay(4, Relay.Direction.kBoth);
+        //pickupRelay2 = new Relay(2, Relay.Direction.kBoth);
+        //dummy = new DigitalInput(10);
+        //inside = new DigitalInput(2);
+        //outside = new DigitalInput(3);
         //raiseSwitch1 = new DigitalInput(5);
-        sonic1 = new AnalogChannel(1,2);
-        approvalRun = new UltrasonicApproval(sonic1, 5000.0);
-        approvalThread = new Thread(approvalRun);
+        //sonic1 = new AnalogChannel(1,2);
+        //approvalRun = new UltrasonicApproval(sonic1, 5000.0);
+        //approvalThread = new Thread(approvalRun);
         //motorOne = new Victor(5);
         //motorTwo = new Victor(6);
-        solenoidControl1 = new SolenoidClick(3,moveStick,latchExtend,latchRetract,"button",dummy); //little
-        solenoidControl3 = new SolenoidClick(2,moveStick,tensionPull1,tensionPush1,"button",dummy); //pull
-        solenoidControl4 = new SolenoidClick(2,moveStick,tensionPull2,tensionPush2,"button",dummy); //pull
+        //solenoidControl1 = new SolenoidClick(3,moveStick,latchExtend,latchRetract,"button",dummy); //little
+        //solenoidControl3 = new SolenoidClick(2,moveStick,tensionPull1,tensionPush1,"button",dummy); //pull
+        //solenoidControl4 = new SolenoidClick(2,moveStick,tensionPull2,tensionPush2,"button",dummy); //pull
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
         
@@ -121,18 +121,18 @@ public class RobotTemplate extends SimpleRobot {
         myDrive.setSafetyEnabled(false);
         //airThread = new Thread(airRun);
         //airThread.start();
-        latchExtend.set(true);
-        latchRetract.set(false);
-        tensionPull1.set(true);
-        tensionPush1.set(false);
-        tensionPull2.set(true);
-        tensionPush2.set(false);
+        //latchExtend.set(true);
+        //latchRetract.set(false);
+        //tensionPull1.set(true);
+        //tensionPush1.set(false);
+        //tensionPull2.set(true);
+        //tensionPush2.set(false);
         //myDrive.mecanumDrive_Cartesian(0.0,-1.0,0.0,0.0);
-        Timer.delay(1.5);
+        //Timer.delay(1.5);
         //myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
-        Timer.delay(6.5);
-        latchExtend.set(false);
-        latchRetract.set(true);
+        //Timer.delay(6.5);
+        //latchExtend.set(false);
+        //latchRetract.set(true);
         //airRun.stop();
     }
 
@@ -142,24 +142,24 @@ public class RobotTemplate extends SimpleRobot {
      */
     public void operatorControl() {
         
-        latchExtend.set(false);
-        latchRetract.set(true);
+        //latchExtend.set(false);
+        //latchRetract.set(true);
         //s3.set(false);
         //s4.set(true);
-        tensionPull1.set(false);
-        tensionPush1.set(true);
-        tensionPull2.set(false);
-        tensionPush2.set(true);
+        //tensionPull1.set(false);
+        //tensionPush1.set(true);
+        //tensionPull2.set(false);
+        //tensionPush2.set(true);
         //airThread = new Thread(airRun);
         //airThread.start(); // starts automatic compressor switching in parallel
-        solenoidThread1 = new Thread(solenoidControl1);
-        solenoidThread1.start();
+        //solenoidThread1 = new Thread(solenoidControl1);
+        //solenoidThread1.start();
         //solenoidThread2 = new Thread(solenoidControl2);
         //solenoidThread2.start();
-        solenoidThread3 = new Thread(solenoidControl3);
-        solenoidThread3.start();
-        solenoidThread4 = new Thread(solenoidControl4);
-        solenoidThread4.start();
+        //solenoidThread3 = new Thread(solenoidControl3);
+        //solenoidThread3.start();
+        //solenoidThread4 = new Thread(solenoidControl4);
+        //solenoidThread4.start();
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
         //approvalThread = new Thread(approvalRun);
@@ -171,22 +171,22 @@ public class RobotTemplate extends SimpleRobot {
            double yMovement = buffer(2,moveStick,inverted,0.18,-0.18);
            double twist = buffer(4,moveStick,true,0.18,-0.18);
            myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
-           relayControl(pickupRelay1,moveStick,3,3,"axis");
-           relayControl(pickupRelay2,moveStick,3,3,"axis");
-           SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
+           //relayControl(pickupRelay1,moveStick,3,3,"axis");
+           //relayControl(pickupRelay2,moveStick,3,3,"axis");
+           //SmartDashboard.putString("Distance", (sonic1.getVoltage()/0.0048828125)+"cm");
            //SmartDashboard.putBoolean("Switch 1", launcherSwitch1.get());
            //SmartDashboard.putBoolean("Switch 2", launcherSwitch2.get());
-           SmartDashboard.putNumber("Trigger data", buffer(3,moveStick,true,0,0));
+           //SmartDashboard.putNumber("Trigger data", buffer(3,moveStick,true,0,0));
            //SmartDashboard.putNumber("Motor 1", motorOne.get());
            //SmartDashboard.putNumber("Motor 2", motorTwo.get());
            
            Timer.delay(0.01);
         }
         //airRun.stop(); // stops automatic switching.
-        solenoidControl1.stop();
+        //solenoidControl1.stop();
         //solenoidControl2.stop();
-        solenoidControl3.stop();
-        solenoidControl4.stop();
+        //solenoidControl3.stop();
+        //solenoidControl4.stop();
         //approvalRun.stop();
         orientationSwitcher.stop();
         

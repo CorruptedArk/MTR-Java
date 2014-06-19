@@ -9,7 +9,9 @@ package edu.wpi.first.wpilibj.templates;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- *
+ * A Runnable class using a button to toggle what is forward and backward on a robot.
+ * It does this by switching the state of a boolean variable. 
+ * That value is then passed to the buffer() function in RobotTemplate.
  * @author Noah
  */
 public class DriveState implements Runnable {
@@ -20,6 +22,12 @@ public class DriveState implements Runnable {
     private volatile boolean running;
     
     
+    /**
+     * A constructor passing all necessary information to the object.
+     * @param defaultState What state will the robot start out with?
+     * @param controller the Joystick that the button is on
+     * @param buttonID the ID of the button
+     */
     public DriveState(boolean defaultState,Joystick controller,int buttonID){
         this.orientation = defaultState;
         this.controller = controller;
