@@ -7,18 +7,8 @@
 
 package edu.wpi.first.wpilibj.templates;
 
+import edu.wpi.first.wpilibj.*;
 
-import edu.wpi.first.wpilibj.SimpleRobot;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.AnalogChannel;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
@@ -38,8 +28,7 @@ public class RobotTemplate extends SimpleRobot {
     Compressor airCompressor;
     Solenoid pull1;
     Solenoid push1;
-    Solenoid pull2;
-    Solenoid push2;
+    
     RobotDrive myDrive;
     Joystick moveStick;
     Joystick shootStick;
@@ -47,8 +36,7 @@ public class RobotTemplate extends SimpleRobot {
     Thread airThread;
     SolenoidClick solenoidControl1;
     Thread solenoidThread1;
-    SolenoidClick solenoidControl2;
-    Thread solenoidThread2;
+    
     DigitalInput dummy;
     DriveState orientationSwitcher;
     Thread orientationThread;
@@ -67,17 +55,16 @@ public class RobotTemplate extends SimpleRobot {
         moveStick = new Joystick(1);
         shootStick = new Joystick(2);
         airCompressor = new Compressor(1,1);
-        pull1 = new Solenoid(1); 
-        push1 = new Solenoid(2);
-        pull2 = new Solenoid(3); 
-        push2 = new Solenoid(4);
+        pull1 = new Solenoid(8); 
+        push1 = new Solenoid(7);
+       
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
         orientationSwitcher = new DriveState(true,moveStick,1);
         orientationThread = new Thread(orientationSwitcher);
         dummy = new DigitalInput(10);
-        solenoidControl1 = new SolenoidClick(3,shootStick,pull1,push1,"axis",dummy); 
-        solenoidControl2 = new SolenoidClick(3,shootStick,pull2,push2,"axis",dummy); 
+        solenoidControl1 = new SolenoidClick(3,moveStick,pull1,push1,"axis",dummy); 
+        
         
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
@@ -91,13 +78,12 @@ public class RobotTemplate extends SimpleRobot {
         airThread.start();
         pull1.set(true);
         push1.set(false);
-        pull2.set(true);
-        push2.set(false);
-        myDrive.mecanumDrive_Cartesian(0.0,-1.0,0.0,0.0);
+       
+        myDrive.mecanumDrive_Cartesian(0.0,1.0,0.0,0.0);
         Timer.delay(1.5);
         myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
         
-        
+        Timer.delay(8.5);
         airRun.stop();
     }
 
@@ -112,12 +98,11 @@ public class RobotTemplate extends SimpleRobot {
         airThread.start(); // starts automatic compressor switching in parallel
         pull1.set(true);
         push1.set(false);
-        pull2.set(true);
-        push2.set(false);
+        
+       
         solenoidThread1 = new Thread(solenoidControl1);
         solenoidThread1.start();
-        solenoidThread2 = new Thread(solenoidControl2);
-        solenoidThread2.start();
+        
         orientationSwitcher = new DriveState(true,moveStick,1);
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
@@ -135,7 +120,7 @@ public class RobotTemplate extends SimpleRobot {
         }
         airRun.stop(); // stops automatic switching.
         solenoidControl1.stop();
-        solenoidControl2.stop();
+        
         orientationSwitcher.stop();
         
     }    
