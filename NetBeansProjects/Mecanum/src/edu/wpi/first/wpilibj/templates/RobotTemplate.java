@@ -28,7 +28,9 @@ public class RobotTemplate extends SimpleRobot {
     Compressor airCompressor;
     Solenoid pull1;
     Solenoid push1;
-    
+    ExecutiveOrder control;
+    ExecutiveRelease release;
+    Thread releaseThread;
     RobotDrive myDrive;
     Joystick moveStick;
     Joystick shootStick;
@@ -57,13 +59,15 @@ public class RobotTemplate extends SimpleRobot {
         airCompressor = new Compressor(1,1);
         pull1 = new Solenoid(8); 
         push1 = new Solenoid(7);
-       
+        control = new ExecutiveOrder(moveStick,shootStick,4);
+        release = new ExecutiveRelease(control);
+        releaseThread = new Thread(release);
         airRun = new AirRunnable(airCompressor);
         airThread = new Thread(airRun);
         orientationSwitcher = new DriveState(true,moveStick,1);
         orientationThread = new Thread(orientationSwitcher);
         dummy = new DigitalInput(10);
-        solenoidControl1 = new SolenoidClick(3,moveStick,pull1,push1,"axis",dummy); 
+        solenoidControl1 = new SolenoidClick(3,control,pull1,push1,"axis",dummy); 
         
         
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
@@ -98,7 +102,8 @@ public class RobotTemplate extends SimpleRobot {
         airThread.start(); // starts automatic compressor switching in parallel
         pull1.set(true);
         push1.set(false);
-        
+        releaseThread = new Thread(release);
+        releaseThread.start();
        
         solenoidThread1 = new Thread(solenoidControl1);
         solenoidThread1.start();
@@ -120,7 +125,7 @@ public class RobotTemplate extends SimpleRobot {
         }
         airRun.stop(); // stops automatic switching.
         solenoidControl1.stop();
-        
+        release.stop();
         orientationSwitcher.stop();
         
     }    

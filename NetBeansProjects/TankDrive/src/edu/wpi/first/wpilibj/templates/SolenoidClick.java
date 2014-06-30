@@ -23,6 +23,7 @@ public class SolenoidClick implements Runnable{
     private final double highMargin;
     private final double lowMargin;
     private final DigitalInput switch1;
+    private ExecutiveOrder control = null;
     
     private volatile boolean running;
     
@@ -90,6 +91,19 @@ public class SolenoidClick implements Runnable{
         this.highMargin = 0.4;
         this.lowMargin = -0.4;
     }
+    
+    public SolenoidClick(int toggler, ExecutiveOrder control, Solenoid solenoid1, Solenoid solenoid2, String inputType, DigitalInput dummy){
+        this.running = true;
+        this.toggler = toggler; 
+        this.control = control;
+        this.joystickName = null;
+        this.solenoid1 = solenoid1;
+        this.solenoid2 = solenoid2;
+        this.inputType = inputType;
+        this.highMargin = 0.4;
+        this.lowMargin = -0.4;
+        this.switch1 = dummy;
+    }
   
     /**
      * Is called once when a SolenoidClick object is started by a Thread object.
@@ -97,14 +111,20 @@ public class SolenoidClick implements Runnable{
      */
     public void run() {
         running = true;
-        if(inputType.equalsIgnoreCase("button")) {
+        if(control != null && inputType.equalsIgnoreCase("button")){
+            executiveButtonToggle();  
+        }
+        else if(control != null && inputType.equalsIgnoreCase("axis")){
+            executiveAxisToggle(); 
+        }
+        else if(inputType.equalsIgnoreCase("button")) {
             buttonToggle();
         }
         else if(inputType.equalsIgnoreCase("axis")) {
             axisToggle();
         }
         else if(inputType.equalsIgnoreCase("switch")) {
-            //switchToggle();
+            switchToggle();
         }
         else {
             throw new IllegalArgumentException(inputType + " is not a valid type of input.");
@@ -171,6 +191,73 @@ public class SolenoidClick implements Runnable{
                 }
             }
         }
+        
+    }
+    public void executiveButtonToggle() {
+      while(running) {       
+            boolean pressed = getButtonPressed();  
+       
+        
+            if(pressed) {
+                solenoid1.set(!solenoid1.get());
+                solenoid2.set(!solenoid2.get());
+                while(pressed) {
+                    pressed = getButtonPressed(); 
+                    solenoid1.set(solenoid1.get());
+                    solenoid2.set(solenoid2.get());
+                }
+            }   
+        
+        }
+    }
+    public void executiveAxisToggle() {
+      while(running) {       
+        boolean pressed = getAxisPressed();  
+       
+        
+            if(pressed) {
+                solenoid1.set(!solenoid1.get());
+                solenoid2.set(!solenoid2.get());
+                while(pressed) {
+                    pressed = getAxisPressed(); 
+                    solenoid1.set(solenoid1.get());
+                    solenoid2.set(solenoid2.get());
+                }
+            }   
+        
+        } 
+    }
+    
+    public boolean getButtonPressed() {
+        boolean pressed = false;
+        
+        if(control.president.getRawButton(toggler)){
+            control.trap();
+            pressed = true;
+        }
+        else if(control.congress.getRawButton(toggler) && control.releaseState){
+            pressed = true;
+        }
+        
+        
+        return pressed;
+    }
+    
+    public boolean getAxisPressed() {
+        boolean pressed = false;
+        double presidentAxis = control.president.getRawAxis(toggler);
+        double congressAxis = control.congress.getRawAxis(toggler);
+            
+        if(presidentAxis >= highMargin || presidentAxis  <= lowMargin){
+            control.trap();
+            pressed = true;
+        }
+        else if((congressAxis >= highMargin || congressAxis  <= lowMargin) && control.releaseState){
+            pressed = true;
+        }
+        
+        
+        return pressed; 
         
     }
     
