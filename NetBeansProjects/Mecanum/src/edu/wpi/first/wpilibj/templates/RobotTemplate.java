@@ -141,8 +141,8 @@ public class RobotTemplate extends SimpleRobot {
   
     
     /**
-     * This function buffers the joystickName.getRawAxis() input.
-     * @param axisNum The ID for the axis in moveStick.
+     * This function buffers Joystick.getRawAxis() input.
+     * @param axisNum The ID for the axis of a Joystick.
      * @param joystickName The Joystick that input is coming from. 
      * @param inverted Is it flipped?
      * @param highMargin The high margin of the buffer.
