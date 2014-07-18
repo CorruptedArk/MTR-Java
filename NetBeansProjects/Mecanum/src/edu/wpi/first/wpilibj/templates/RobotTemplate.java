@@ -8,6 +8,9 @@
 package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.smartdashboard.*;
+import edu.wpi.first.wpilibj.command.*;
+
 
 
 
@@ -39,6 +42,10 @@ public class RobotTemplate extends SimpleRobot {
     SolenoidClick solenoidControl1;
     Thread solenoidThread1;
     
+     
+    SendableChooser autoChooser; 
+    String autonomousID;
+    
     DigitalInput dummy;
     DriveState orientationSwitcher;
     Thread orientationThread;
@@ -69,6 +76,11 @@ public class RobotTemplate extends SimpleRobot {
         dummy = new DigitalInput(10);
         solenoidControl1 = new SolenoidClick(3,control,pull1,push1,"axis",dummy); 
         
+        autoChooser = new SendableChooser();
+        autoChooser.addDefault("Auto1", "1");
+        autoChooser.addObject("Auto2", "2");
+        autoChooser.addObject("Auto3", "3");
+        SmartDashboard.putData("Autonomous mode chooser", autoChooser);
         
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
@@ -77,18 +89,18 @@ public class RobotTemplate extends SimpleRobot {
     
      //This function is called once each time the robot enters autonomous mode.
     public void autonomous() {
-        myDrive.setSafetyEnabled(false);
-        airThread = new Thread(airRun);
-        airThread.start();
-        pull1.set(true);
-        push1.set(false);
-       
-        myDrive.mecanumDrive_Cartesian(0.0,1.0,0.0,0.0);
-        Timer.delay(1.5);
-        myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
+        autonomousID = (String)autoChooser.getSelected();
         
-        Timer.delay(8.5);
-        airRun.stop();
+        if(autonomousID.equals("1")){
+            autonomous1();
+        }
+        else if(autonomousID.equals("2")){
+            autonomous2();
+        }
+        else if(autonomousID.equals("3")){
+            autonomous3();
+        }
+        
     }
 
     
@@ -138,7 +150,29 @@ public class RobotTemplate extends SimpleRobot {
     
     }
     
-  
+    public void autonomous1(){
+        myDrive.setSafetyEnabled(false);
+        airThread = new Thread(airRun);
+        airThread.start();
+        pull1.set(true);
+        push1.set(false);
+       
+        myDrive.mecanumDrive_Cartesian(0.0,1.0,0.0,0.0);
+        Timer.delay(1.5);
+        myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
+        
+        Timer.delay(8.5);
+        airRun.stop();
+    }
+    
+    public void autonomous2(){
+        
+    }
+    
+    public void autonomous3(){
+        
+    }
+    
     
     /**
      * This function buffers Joystick.getRawAxis() input.
