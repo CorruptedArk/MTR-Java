@@ -77,9 +77,9 @@ public class RobotTemplate extends SimpleRobot {
         solenoidControl1 = new SolenoidClick(3,control,pull1,push1,"axis",dummy); 
         
         autoChooser = new SendableChooser();
-        autoChooser.addDefault("Auto1", "1");
-        autoChooser.addObject("Auto2", "2");
-        autoChooser.addObject("Auto3", "3");
+        autoChooser.addDefault("Auto Forward", "1");
+        autoChooser.addObject("Auto Sideways", "2");
+        autoChooser.addObject("Auto Twist", "3");
         SmartDashboard.putData("Autonomous mode chooser", autoChooser);
         
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
@@ -166,11 +166,33 @@ public class RobotTemplate extends SimpleRobot {
     }
     
     public void autonomous2(){
+        myDrive.setSafetyEnabled(false);
+        airThread = new Thread(airRun);
+        airThread.start();
+        pull1.set(true);
+        push1.set(false);
+       
+        myDrive.mecanumDrive_Cartesian(1.0,0.0,0.0,0.0);
+        Timer.delay(1.5);
+        myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
         
+        Timer.delay(8.5);
+        airRun.stop();
     }
     
     public void autonomous3(){
+        myDrive.setSafetyEnabled(false);
+        airThread = new Thread(airRun);
+        airThread.start();
+        pull1.set(true);
+        push1.set(false);
+       
+        myDrive.mecanumDrive_Cartesian(0.0,0.0,1.0,0.0);
+        Timer.delay(1.5);
+        myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
         
+        Timer.delay(8.5);
+        airRun.stop();
     }
     
     
