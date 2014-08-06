@@ -39,7 +39,7 @@ public class RobotTemplate extends SimpleRobot {
     SolenoidClick solenoidControl1;
     Thread solenoidThread1;
     
-    DigitalInput dummy;
+    
     DriveState orientationSwitcher;
     Thread orientationThread;
     
@@ -66,8 +66,8 @@ public class RobotTemplate extends SimpleRobot {
         airThread = new Thread(airRun);
         orientationSwitcher = new DriveState(true,moveStick,1);
         orientationThread = new Thread(orientationSwitcher);
-        dummy = new DigitalInput(10);
-        solenoidControl1 = new SolenoidClick(3,control,pull1,push1,"axis",dummy); 
+       
+        solenoidControl1 = new SolenoidClick(3,control,pull1,push1,"axis"); 
         
         
        

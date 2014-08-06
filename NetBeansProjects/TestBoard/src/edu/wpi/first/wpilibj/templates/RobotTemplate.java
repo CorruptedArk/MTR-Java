@@ -31,7 +31,7 @@ public class RobotTemplate extends SimpleRobot {
     Encoder encoder;
     DigitalInput limit1;
     DigitalInput limit2;
-    DigitalInput dummy;
+   
     
     
     
@@ -52,9 +52,8 @@ public class RobotTemplate extends SimpleRobot {
         encoder = new Encoder(4,5,false);
         limit1 = new DigitalInput(2);
         limit2 = new DigitalInput(3);
-        dummy = new DigitalInput(10);
-        pistonOne = new SolenoidClick(1,joystickOne,pullOne,pushOne,"button",dummy);
-        pistonTwo = new SolenoidClick(2,joystickOne,pullTwo,pushTwo,"button",dummy);
+        pistonOne = new SolenoidClick(1,joystickOne,pullOne,pushOne,"button");
+        pistonTwo = new SolenoidClick(2,joystickOne,pullTwo,pushTwo,"button");
         airThread = new Thread(airRun);
         pistonOneThread = new Thread(pistonOne);
         pistonTwoThread = new Thread(pistonTwo);

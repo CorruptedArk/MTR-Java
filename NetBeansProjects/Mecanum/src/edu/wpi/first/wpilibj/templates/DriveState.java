@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj.Joystick;
 public class DriveState implements Runnable {
     public volatile boolean orientation;
     
-    private volatile Joystick controller;
-    private volatile int buttonID;
+    private final Joystick controller;
+    private final int buttonID;
     private volatile boolean running;
     
     

@@ -35,9 +35,8 @@ public class SolenoidClick implements Runnable{
      * @param solenoid1 The first solenoid 
      * @param solenoid2 The second solenoid
      * @param inputType Axis or Button?
-     * @param dummy A placeholder. Use a switch that doesn't exist.
      */
-    public SolenoidClick(int toggler, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2, String inputType, DigitalInput dummy) {
+    public SolenoidClick(int toggler, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2, String inputType) {
         this.running = true;
         this.toggler = toggler;
         this.joystickName = joystickName;
@@ -46,7 +45,7 @@ public class SolenoidClick implements Runnable{
         this.inputType = inputType;
         this.highMargin = 0.4;
         this.lowMargin = -0.4;
-        this.switch1 = dummy;
+        this.switch1 = null;
     }
     
     /**
@@ -59,9 +58,8 @@ public class SolenoidClick implements Runnable{
      * @param inputType Axis or Button?
      * @param highMargin The high margin for the axis
      * @param lowMargin The low margin for the axis
-     * @param dummy A placeholder. Use a switch that doesn't exist.
      */ 
-    public SolenoidClick(int toggler, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2, String inputType, double highMargin, double lowMargin, DigitalInput dummy) {
+    public SolenoidClick(int toggler, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2, String inputType, double highMargin, double lowMargin) {
         this.running = true;
         this.toggler = toggler;
         this.joystickName = joystickName;
@@ -70,7 +68,7 @@ public class SolenoidClick implements Runnable{
         this.inputType = inputType;
         this.highMargin = highMargin;
         this.lowMargin = lowMargin;
-        this.switch1 = dummy;
+        this.switch1 = null;
     }
     
     /**
@@ -92,7 +90,15 @@ public class SolenoidClick implements Runnable{
         this.lowMargin = -0.4;
     }
     
-    public SolenoidClick(int toggler, ExecutiveOrder control, Solenoid solenoid1, Solenoid solenoid2, String inputType, DigitalInput dummy){
+    /**
+     * Constructor. Creates an instance of SolenoidClick that uses an ExecutiveOrder object for input. 
+     * @param toggler The ID of the button that will toggle the solenoids.
+     * @param control The ExecutiveOrder object
+     * @param solenoid1 The first solenoid
+     * @param solenoid2 The second solenoid
+     * @param inputType Axis or Button?
+     */
+    public SolenoidClick(int toggler, ExecutiveOrder control, Solenoid solenoid1, Solenoid solenoid2, String inputType){
         this.running = true;
         this.toggler = toggler; 
         this.control = control;
@@ -102,7 +108,7 @@ public class SolenoidClick implements Runnable{
         this.inputType = inputType;
         this.highMargin = 0.4;
         this.lowMargin = -0.4;
-        this.switch1 = dummy;
+        this.switch1 = null;
     }
   
     /**
@@ -123,7 +129,7 @@ public class SolenoidClick implements Runnable{
         else if(inputType.equalsIgnoreCase("axis")) {
             axisToggle();
         }
-        else if(inputType.equalsIgnoreCase("switch")) {
+        else if(inputType.equalsIgnoreCase("switch") && switch1 != null) {
             switchToggle();
         }
         else {
@@ -193,6 +199,10 @@ public class SolenoidClick implements Runnable{
         }
         
     }
+
+    /**
+     *Uses an ExecutiveOrder object and a button to toggle solenoids.
+     */
     public void executiveButtonToggle() {
       while(running) {       
             boolean pressed = getButtonPressed();  
@@ -210,6 +220,10 @@ public class SolenoidClick implements Runnable{
         
         }
     }
+    
+    /**
+     *Uses an ExecutiveOrder object and an axis to toggle solenoids.
+     */
     public void executiveAxisToggle() {
       while(running) {       
         boolean pressed = getAxisPressed();  
@@ -228,6 +242,10 @@ public class SolenoidClick implements Runnable{
         } 
     }
     
+    /**
+     * Uses an ExecutiveOrder object to check if the button is pressed.
+     * @return pressed 
+     */
     public boolean getButtonPressed() {
         boolean pressed = false;
         
@@ -242,7 +260,11 @@ public class SolenoidClick implements Runnable{
         
         return pressed;
     }
-    
+
+    /**
+     *Uses an ExecutiveOrder object to check if the axis is in the defined margin.
+     * @return pressed
+     */
     public boolean getAxisPressed() {
         boolean pressed = false;
         double presidentAxis = control.president.getRawAxis(toggler);

@@ -46,7 +46,6 @@ public class RobotTemplate extends SimpleRobot {
     SendableChooser autoChooser; 
     String autonomousID;
     
-    DigitalInput dummy;
     DriveState orientationSwitcher;
     Thread orientationThread;
     
@@ -73,8 +72,7 @@ public class RobotTemplate extends SimpleRobot {
         airThread = new Thread(airRun);
         orientationSwitcher = new DriveState(true,moveStick,1);
         orientationThread = new Thread(orientationSwitcher);
-        dummy = new DigitalInput(10);
-        solenoidControl1 = new SolenoidClick(3,control,pull1,push1,"axis",dummy); 
+        solenoidControl1 = new SolenoidClick(3,control,pull1,push1,"axis"); 
         
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Auto Forward", "1");
@@ -205,7 +203,7 @@ public class RobotTemplate extends SimpleRobot {
      * @param lowMargin The low margin of the buffer.
      * @return moveOut - The buffered axis data from joystickName.getRawAxis().
      **/
-    public double buffer(int axisNum,Joystick joystickName, boolean inverted, double highMargin, double lowMargin) {
+    public double buffer(int axisNum, Joystick joystickName, boolean inverted, double highMargin, double lowMargin) {
         double moveIn = joystickName.getRawAxis(axisNum);
         double moveOut;
         moveOut = 0.0;

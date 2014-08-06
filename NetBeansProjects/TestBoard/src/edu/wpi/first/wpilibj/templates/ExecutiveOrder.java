@@ -8,7 +8,7 @@ package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.*;
 /**
- *
+ * A class that helps establish a hierarchy between two robot operators.
  * @author Noah
  */
 public class ExecutiveOrder {
@@ -16,20 +16,32 @@ public class ExecutiveOrder {
     public final Joystick president;
     public final Joystick congress;
     public final int release;
-    public volatile boolean releaseState; 
-    
+    public volatile boolean releaseState;
+
+    /**
+     * A constructor.
+     * @param president The lead driver's controller.
+     * @param congress The secondary driver's controller.
+     * @param release The button deciding whether or not congress will be trapped.
+     */
     public ExecutiveOrder(Joystick president, Joystick congress, int release){
         this.releaseState = true;
         this.president = president;
         this.congress = congress;
         this.release = release;
-    } 
-    
-    public void trap(){
+    }
+
+    /**
+     *Sets releaseState to false.
+     */
+    public synchronized void trap(){
        releaseState = false; 
     }
     
-    public void release(){
+    /**
+     *Sets releaseState to true.
+     */
+    public synchronized void release(){
        releaseState = true;  
     }
     
