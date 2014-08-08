@@ -16,7 +16,7 @@ public class ExecutiveOrder {
     public final Joystick president;
     public final Joystick congress;
     public final int release;
-    public volatile boolean releaseState;
+    public boolean releaseState;
 
     /**
      * A constructor.
