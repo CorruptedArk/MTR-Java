@@ -246,28 +246,8 @@ public class RobotTemplate extends SimpleRobot {
         solenoid2.set(true);
        }
        
-     } 
-    
-    /**
-     * This function toggles the solenoid with one button. 
-     * @param toggleButton ID of button to toggle with.
-     * @param joystickName Name of Joystick
-     * @param solenoid1 First Solenoid
-     * @param solenoid2 Second Solenoid
-     */
-    public void solenoidClick(int toggleButton, Joystick joystickName, Solenoid solenoid1, Solenoid solenoid2) {
-        boolean pressed = joystickName.getRawButton(toggleButton);
-        
-        if (pressed) {
-            solenoid1.set(!solenoid1.get());
-            solenoid2.set(!solenoid2.get());
-            while (pressed) {
-                solenoid1.set(solenoid1.get());
-                solenoid2.set(solenoid2.get());
-            }
-        } 
-        
     }
+    
     /**
      * This function controls operation of a relay with a switch.
      * @param relayName The Relay object.
