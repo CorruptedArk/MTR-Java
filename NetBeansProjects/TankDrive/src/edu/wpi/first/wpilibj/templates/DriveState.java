@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class DriveState implements Runnable {
     public volatile boolean orientation;
-    
+    private final boolean defaultState;
     private final Joystick controller;
     private final int buttonID;
     private volatile boolean running;
@@ -30,6 +30,7 @@ public class DriveState implements Runnable {
      */
     public DriveState(boolean defaultState,Joystick controller,int buttonID){
         this.orientation = defaultState;
+        this.defaultState = defaultState;
         this.controller = controller;
         this.buttonID = buttonID;
         
@@ -54,5 +55,6 @@ public class DriveState implements Runnable {
     
     public void stop(){
         running = false;
+        orientation = defaultState;
     }
 }

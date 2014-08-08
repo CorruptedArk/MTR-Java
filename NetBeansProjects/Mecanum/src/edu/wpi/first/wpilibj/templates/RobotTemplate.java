@@ -118,7 +118,6 @@ public class RobotTemplate extends SimpleRobot {
         solenoidThread1 = new Thread(solenoidControl1);
         solenoidThread1.start();
         
-        orientationSwitcher = new DriveState(true,moveStick,1);
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
         
