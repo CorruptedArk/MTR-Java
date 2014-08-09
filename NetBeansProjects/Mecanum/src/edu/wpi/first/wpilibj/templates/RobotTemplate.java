@@ -44,7 +44,7 @@ public class RobotTemplate extends SimpleRobot {
     
      
     SendableChooser autoChooser; 
-    String autonomousID;
+    Integer autonomousID;
     
     DriveState orientationSwitcher;
     Thread orientationThread;
@@ -75,11 +75,10 @@ public class RobotTemplate extends SimpleRobot {
         solenoidControl1 = new SolenoidClick(3,control,pull1,push1,"axis"); 
         
         autoChooser = new SendableChooser();
-        autoChooser.addDefault("Auto Forward", "1");
-        autoChooser.addObject("Auto Sideways", "2");
-        autoChooser.addObject("Auto Twist", "3");
-        SmartDashboard.putData("Autonomous mode chooser", autoChooser);
-        
+        autoChooser.addDefault("Auto Forward", new Integer(1));
+        autoChooser.addObject("Auto Sideways", new Integer(2));
+        autoChooser.addObject("Auto Twist", new Integer(3));
+        SmartDashboard.putData("Autonomous chooser", autoChooser);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
         
@@ -87,16 +86,18 @@ public class RobotTemplate extends SimpleRobot {
     
      //This function is called once each time the robot enters autonomous mode.
     public void autonomous() {
-        autonomousID = (String)autoChooser.getSelected();
+        autonomousID = (Integer)autoChooser.getSelected();
         
-        if(autonomousID.equals("1")){
-            autonomous1();
-        }
-        else if(autonomousID.equals("2")){
-            autonomous2();
-        }
-        else if(autonomousID.equals("3")){
-            autonomous3();
+        switch(autonomousID.intValue()) {
+            case 1:
+                autonomous1();
+                break;
+            case 2:
+                autonomous2();
+                break;
+            case 3:
+                autonomous3();
+                break;
         }
         
     }
