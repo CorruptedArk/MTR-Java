@@ -21,10 +21,10 @@ public class ExecutiveRelease implements Runnable {
      */
     public ExecutiveRelease(ExecutiveOrder control){
         this.control = control;
-        this.running = true;
     }
 
     public void run() {
+       running = true; 
        while(running) {
           boolean pressed = control.president.getRawButton(control.release);
           
