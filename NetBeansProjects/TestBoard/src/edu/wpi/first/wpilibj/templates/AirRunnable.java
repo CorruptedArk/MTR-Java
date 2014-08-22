@@ -7,6 +7,7 @@
 package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  *A Runnable class to toggle the compressor on and off in parallel.
@@ -33,9 +34,10 @@ public class AirRunnable implements Runnable {
            if (airCompressor.getPressureSwitchValue()) {
                 airCompressor.stop();
             }
-            else {
+           else {
                 airCompressor.start();
             }
+           Timer.delay(0.005);
        }
     }
     

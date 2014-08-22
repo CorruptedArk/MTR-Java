@@ -91,6 +91,8 @@ public class RobotTemplate extends SimpleRobot {
             motorTwo.set(motorTwoValue);
             encoder.setDistancePerPulse(1);
             SmartDashboard.putNumber("Pulses Per Second", encoder.getRate());
+            Timer.delay(motorOneValue);
+            Timer.delay(0.01);
         }
 
         airRun.stop();

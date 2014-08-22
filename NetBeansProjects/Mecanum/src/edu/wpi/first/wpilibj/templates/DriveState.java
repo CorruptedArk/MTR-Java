@@ -7,6 +7,7 @@
 package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * A Runnable class using a button to toggle what is forward and backward on a robot.
@@ -45,10 +46,10 @@ public class DriveState implements Runnable {
                 orientation = !orientation;
                 while(pressed){
                     pressed = controller.getRawButton(buttonID);
-                    
+                    Timer.delay(0.005);
                 }
             }
-            
+            Timer.delay(0.005);
         }
         
     }

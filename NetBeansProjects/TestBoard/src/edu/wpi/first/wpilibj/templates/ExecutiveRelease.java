@@ -6,6 +6,8 @@
 
 package edu.wpi.first.wpilibj.templates;
 
+import edu.wpi.first.wpilibj.Timer;
+
 /**
  *A Runnable class that manages the releaseState of an ExecutiveOrder class.
  * @author Noah
@@ -32,8 +34,10 @@ public class ExecutiveRelease implements Runnable {
               control.release();
               while(pressed){
                   pressed = control.president.getRawButton(control.release);
+                  Timer.delay(0.005);
               }
           }
+         Timer.delay(0.005); 
        }
     }
     

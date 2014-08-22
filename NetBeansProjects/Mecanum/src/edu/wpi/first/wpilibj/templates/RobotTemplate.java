@@ -45,6 +45,8 @@ public class RobotTemplate extends SimpleRobot {
      
     SendableChooser autoChooser; 
     Integer autonomousID;
+    SendableChooser teleChooser;
+    Integer teleID;
     
     DriveState orientationSwitcher;
     Thread orientationThread;
@@ -67,18 +69,22 @@ public class RobotTemplate extends SimpleRobot {
         push1 = new Solenoid(7);
         control = new ExecutiveOrder(moveStick,shootStick,4);
         release = new ExecutiveRelease(control);
-        releaseThread = new Thread(release);
         airRun = new AirRunnable(airCompressor);
-        airThread = new Thread(airRun);
         orientationSwitcher = new DriveState(true,moveStick,1);
-        orientationThread = new Thread(orientationSwitcher);
-        solenoidControl1 = new SolenoidClick(3,control,pull1,push1,"axis"); 
+        
         
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Auto Forward", new Integer(1));
         autoChooser.addObject("Auto Sideways", new Integer(2));
         autoChooser.addObject("Auto Twist", new Integer(3));
-        SmartDashboard.putData("Autonomous chooser", autoChooser);
+        
+        teleChooser = new SendableChooser();
+        teleChooser.addDefault("Normal", new Integer(1));
+        teleChooser.addObject("Guest Driver", new Integer(2));
+        
+        SmartDashboard.putData("Autonomous Chooser", autoChooser);
+        SmartDashboard.putData("TeleOp Chooser", teleChooser);
+        
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
         
@@ -107,8 +113,28 @@ public class RobotTemplate extends SimpleRobot {
      * This function is called once each time the robot enters operator control.
      */
     public void operatorControl() {
+        teleID = (Integer)teleChooser.getSelected();
         
-       
+        switch(teleID.intValue()) {
+            case 1:
+                teleOpLoop1();
+                break;
+            case 2:
+                teleOpLoop2();
+                break;
+        }
+        
+    }    
+    
+    /**
+     * This function is called once each time the robot enters test mode.
+     */
+    public void test() {
+        
+    
+    }
+    
+    public void teleOpLoop1() {
         airThread = new Thread(airRun);
         airThread.start(); // starts automatic compressor switching in parallel
         pull1.set(true);
@@ -116,6 +142,7 @@ public class RobotTemplate extends SimpleRobot {
         releaseThread = new Thread(release);
         releaseThread.start();
        
+        solenoidControl1 = new SolenoidClick(3,control,pull1,push1,"axis"); 
         solenoidThread1 = new Thread(solenoidControl1);
         solenoidThread1.start();
         
@@ -123,7 +150,10 @@ public class RobotTemplate extends SimpleRobot {
         orientationThread.start();
         
         while (isOperatorControl() && isEnabled()) {
-           myDrive.setSafetyEnabled(true); 
+           myDrive.setSafetyEnabled(true);
+           if(control.president.getRawButton(2)){
+              control.trap();
+           }
            boolean inverted = orientationSwitcher.orientation;
            double xMovement = buffer(1,moveStick,inverted,0.18,-0.18);
            double yMovement = buffer(2,moveStick,inverted,0.18,-0.18);
@@ -137,15 +167,48 @@ public class RobotTemplate extends SimpleRobot {
         solenoidControl1.stop();
         release.stop();
         orientationSwitcher.stop();
-        
-    }    
+    }
     
-    /**
-     * This function is called once each time the robot enters test mode.
-     */
-    public void test() {
+    public void teleOpLoop2() {
+        airThread = new Thread(airRun);
+        airThread.start(); // starts automatic compressor switching in parallel
+        pull1.set(true);
+        push1.set(false);
+        releaseThread = new Thread(release);
+        releaseThread.start();
+       
+        solenoidControl1 = new SolenoidClick(3,control,pull1,push1,"axis"); 
+        solenoidThread1 = new Thread(solenoidControl1);
+        solenoidThread1.start();
         
-    
+        orientationThread = new Thread(orientationSwitcher);
+        orientationThread.start();
+        
+        while (isOperatorControl() && isEnabled()) {
+           myDrive.setSafetyEnabled(true); 
+           Joystick currentDriver;
+           if(control.president.getRawButton(2)){
+              control.trap();
+           }
+           if(control.releaseState){
+               currentDriver = control.congress;
+           }
+           else {
+               currentDriver = control.president;
+           }
+           boolean inverted = orientationSwitcher.orientation;
+           double xMovement = buffer(1,currentDriver,inverted,0.18,-0.18);
+           double yMovement = buffer(2,currentDriver,inverted,0.18,-0.18);
+           double twist = buffer(4,currentDriver,true,0.18,-0.18);
+           myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
+           
+           
+           Timer.delay(0.01);
+        }
+        airRun.stop(); // stops automatic switching.
+        solenoidControl1.stop();
+        release.stop();
+        orientationSwitcher.stop();  
     }
     
     public void autonomous1(){

@@ -9,6 +9,7 @@ package edu.wpi.first.wpilibj.templates;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  *A Runnable class that toggles solenoids in parallel with a single input.
@@ -151,9 +152,10 @@ public class SolenoidClick implements Runnable{
                     pressed = joystickName.getRawButton(toggler);
                     solenoid1.set(solenoid1.get());
                     solenoid2.set(solenoid2.get());
+                    Timer.delay(0.005);
                 }
             }   
-        
+            Timer.delay(0.005);
         }
     }
     
@@ -175,8 +177,10 @@ public class SolenoidClick implements Runnable{
                     pressed = axisVal >= highMargin || axisVal <= lowMargin;
                     solenoid1.set(solenoid1.get());
                     solenoid2.set(solenoid2.get());
+                    Timer.delay(0.005);
                 }
             }
+            Timer.delay(0.005);
         }
     }
     
@@ -194,8 +198,10 @@ public class SolenoidClick implements Runnable{
                     pressed = switch1.get();
                     solenoid1.set(solenoid1.get());
                     solenoid2.set(solenoid2.get());
+                    Timer.delay(0.005);
                 }
             }
+            Timer.delay(0.005);
         }
         
     }
@@ -215,9 +221,10 @@ public class SolenoidClick implements Runnable{
                     pressed = getButtonPressed(); 
                     solenoid1.set(solenoid1.get());
                     solenoid2.set(solenoid2.get());
+                    Timer.delay(0.005);
                 }
             }   
-        
+            Timer.delay(0.005);
         }
     }
     
@@ -236,9 +243,10 @@ public class SolenoidClick implements Runnable{
                     pressed = getAxisPressed(); 
                     solenoid1.set(solenoid1.get());
                     solenoid2.set(solenoid2.get());
+                    Timer.delay(0.005);
                 }
             }   
-        
+            Timer.delay(0.005);
         } 
     }
     

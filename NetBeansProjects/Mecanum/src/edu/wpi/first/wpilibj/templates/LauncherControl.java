@@ -75,7 +75,7 @@ public class LauncherControl implements Runnable {
                 tensionPull2.set(false);
                 tensionPush2.set(true);
             }
-            
+            Timer.delay(0.005); 
         }
         
     }
