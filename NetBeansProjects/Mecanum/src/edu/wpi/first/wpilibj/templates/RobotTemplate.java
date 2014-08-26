@@ -190,7 +190,7 @@ public class RobotTemplate extends SimpleRobot {
            if(control.president.getRawButton(2)){
               control.trap();
            }
-           if(control.releaseState){
+           if(control.getReleaseState()){
                currentDriver = control.congress;
            }
            else {

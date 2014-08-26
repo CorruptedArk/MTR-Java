@@ -261,7 +261,7 @@ public class SolenoidClick implements Runnable{
             control.trap();
             pressed = true;
         }
-        else if(control.congress.getRawButton(toggler) && control.releaseState){
+        else if(control.congress.getRawButton(toggler) && control.getReleaseState()){
             pressed = true;
         }
         
@@ -282,7 +282,7 @@ public class SolenoidClick implements Runnable{
             control.trap();
             pressed = true;
         }
-        else if((congressAxis >= highMargin || congressAxis  <= lowMargin) && control.releaseState){
+        else if((congressAxis >= highMargin || congressAxis  <= lowMargin) && control.getReleaseState()){
             pressed = true;
         }
         

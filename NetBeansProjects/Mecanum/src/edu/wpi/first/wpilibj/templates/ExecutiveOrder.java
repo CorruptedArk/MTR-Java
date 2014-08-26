@@ -16,7 +16,7 @@ public class ExecutiveOrder {
     public final Joystick president;
     public final Joystick congress;
     public final int release;
-    public boolean releaseState;
+    private boolean releaseState;
 
     /**
      * A constructor.
@@ -43,6 +43,14 @@ public class ExecutiveOrder {
      */
     public synchronized void release(){
        releaseState = true;  
+    }
+    
+    /**
+     *Returns the current releaseState value 
+     * @return releaseState
+     */
+    public synchronized boolean getReleaseState() {
+       return releaseState; 
     }
     
 }
