@@ -211,14 +211,14 @@ public class SolenoidClick implements Runnable{
      */
     public void executiveButtonToggle() {
       while(running) {       
-            boolean pressed = getButtonPressed();  
+            boolean pressed = getExecutiveButtonPressed();  
        
         
             if(pressed) {
                 solenoid1.set(!solenoid1.get());
                 solenoid2.set(!solenoid2.get());
                 while(pressed) {
-                    pressed = getButtonPressed(); 
+                    pressed = getExecutiveButtonPressed(); 
                     solenoid1.set(solenoid1.get());
                     solenoid2.set(solenoid2.get());
                     Timer.delay(0.005);
@@ -233,14 +233,14 @@ public class SolenoidClick implements Runnable{
      */
     public void executiveAxisToggle() {
       while(running) {       
-        boolean pressed = getAxisPressed();  
+        boolean pressed = getExecutiveAxisPressed();  
        
         
             if(pressed) {
                 solenoid1.set(!solenoid1.get());
                 solenoid2.set(!solenoid2.get());
                 while(pressed) {
-                    pressed = getAxisPressed(); 
+                    pressed = getExecutiveAxisPressed(); 
                     solenoid1.set(solenoid1.get());
                     solenoid2.set(solenoid2.get());
                     Timer.delay(0.005);
@@ -254,7 +254,7 @@ public class SolenoidClick implements Runnable{
      * Uses an ExecutiveOrder object to check if the button is pressed.
      * @return pressed 
      */
-    public boolean getButtonPressed() {
+    public boolean getExecutiveButtonPressed() {
         boolean pressed = false;
         
         if(control.president.getRawButton(toggler)){
@@ -273,7 +273,7 @@ public class SolenoidClick implements Runnable{
      *Uses an ExecutiveOrder object to check if the axis is in the defined margin.
      * @return pressed
      */
-    public boolean getAxisPressed() {
+    public boolean getExecutiveAxisPressed() {
         boolean pressed = false;
         double presidentAxis = control.president.getRawAxis(toggler);
         double congressAxis = control.congress.getRawAxis(toggler);
