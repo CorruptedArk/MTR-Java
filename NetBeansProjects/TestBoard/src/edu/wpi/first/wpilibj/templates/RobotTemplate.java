@@ -19,7 +19,28 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
  * directory.
  */
 public class RobotTemplate extends SimpleRobot {
-   
+    
+    //Constants for Buttons
+    static final int A_BUTTON = 1;
+    static final int B_BUTTON = 2;
+    static final int X_BUTTON = 3;
+    static final int Y_BUTTON = 4;
+    static final int LEFT_BUMPER = 5;
+    static final int RIGHT_BUMPER = 6;
+    static final int BACK_BUTTON = 7;
+    static final int START_BUTTON = 8;
+    static final int LEFT_JOYSTICK_CLICK = 9;
+    static final int RIGHT_JOYSTICK_CLICK = 10;
+    
+    //Constants for Axes
+    static final int LEFT_X_AXIS = 1;
+    static final int LEFT_Y_AXIS = 2;
+    static final int TRIGGERS_AXIS = 3;
+    static final int RIGHT_X_AXIS = 4;
+    static final int RIGHT_Y_AXIS = 5;
+    static final int D_PAD = 6; // Buggy, not recommended
+    
+    
     Joystick joystickOne;
     Victor motorOne;
     Talon motorTwo;
@@ -52,8 +73,8 @@ public class RobotTemplate extends SimpleRobot {
         encoder = new Encoder(4,5,false);
         limit1 = new DigitalInput(2);
         limit2 = new DigitalInput(3);
-        pistonOne = new SolenoidClick(1,joystickOne,pullOne,pushOne,"button");
-        pistonTwo = new SolenoidClick(2,joystickOne,pullTwo,pushTwo,"button");
+        pistonOne = new SolenoidClick(A_BUTTON,joystickOne,pullOne,pushOne,"button");
+        pistonTwo = new SolenoidClick(B_BUTTON,joystickOne,pullTwo,pushTwo,"button");
         airThread = new Thread(airRun);
         pistonOneThread = new Thread(pistonOne);
         pistonTwoThread = new Thread(pistonTwo);
@@ -85,8 +106,8 @@ public class RobotTemplate extends SimpleRobot {
         pistonTwoThread.start();
         
         while(isOperatorControl() && isEnabled()){
-            double motorOneValue = buffer(2,joystickOne,true,0.18,-0.18);
-            double motorTwoValue = buffer(5,joystickOne,true,0.18,-0.18);
+            double motorOneValue = buffer(LEFT_Y_AXIS,joystickOne,true,0.18,-0.18);
+            double motorTwoValue = buffer(RIGHT_Y_AXIS,joystickOne,true,0.18,-0.18);
             motorOne.set(motorOneValue);
             motorTwo.set(motorTwoValue);
             encoder.setDistancePerPulse(1);
@@ -134,33 +155,5 @@ public class RobotTemplate extends SimpleRobot {
 	
 	return moveOut;
    }
-    
-    /**
-    * Controller Mapping
-    1: A
-    2: B
-    3: X
-    4: Y
-    5: Left Bumper
-    6: Right Bumper
-    7: Back
-    8: Start
-    9: Left Joystick
-    10: Right Joystick
-
-    The axis on the controller follow this mapping
-    (all output is between -1 and 1)
-    1: Left Stick X Axis
-    -Left:Negative ; Right: Positive
-    2: Left Stick Y Axis
-    -Up: Negative ; Down: Positive
-    3: Triggers
-    -Left: Positive ; Right: Negative
-    4: Right Stick X Axis
-    -Left: Negative ; Right: Positive
-    5: Right Stick Y Axis
-    -Up: Negative ; Down: Positive
-    6: Directional Pad (Not recommended, buggy)
-    */
     
 }
