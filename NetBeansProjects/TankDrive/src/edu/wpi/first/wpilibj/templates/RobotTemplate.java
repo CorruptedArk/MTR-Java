@@ -189,6 +189,42 @@ public class RobotTemplate extends SimpleRobot {
    }
    
         
+    /**
+     * This function buffers Joystick.getRawAxis() input.
+     * @param axisNum The ID for the axis of a Joystick.
+     * @param joystickName The Joystick that input is coming from. 
+     * @param inverted Is it flipped?
+     * @param highMargin The high margin of the buffer.
+     * @param lowMargin The low margin of the buffer.
+     * @param scale The amount you want to divide the output by.
+     * @return moveOut - The buffered axis data from joystickName.getRawAxis().
+     **/
+    public double buffer(int axisNum, Joystick joystickName, boolean inverted, double highMargin, double lowMargin, double scale) {
+        double moveIn = joystickName.getRawAxis(axisNum);
+        double moveOut;
+        moveOut = 0.0;
+        
+        if(moveIn >= lowMargin && moveIn <= highMargin ) {
+         moveOut = 0.0;
+        }
+        else{
+            if(inverted){
+                moveOut = -moveIn;
+            }
+            else if(!inverted){ 
+                moveOut = moveIn;
+            }    
+        }
+	
+        if(scale <= 1){
+            scale = 1;
+        }
+        
+        moveOut = moveOut/scale;
+        
+	return moveOut;
+   }
+    
     
     /**
      * This function toggles the solenoids with two buttons.

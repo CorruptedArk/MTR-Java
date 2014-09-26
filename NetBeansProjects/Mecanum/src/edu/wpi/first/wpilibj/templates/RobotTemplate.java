@@ -106,6 +106,7 @@ public class RobotTemplate extends SimpleRobot {
         
         SmartDashboard.putData("Autonomous Chooser", autoChooser);
         SmartDashboard.putData("TeleOp Chooser", teleChooser);
+        SmartDashboard.putNumber("Scale Down Factor", 1);
         
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
@@ -191,7 +192,7 @@ public class RobotTemplate extends SimpleRobot {
         orientationSwitcher.stop();
     }
     
-    public void teleOpLoop2() {
+    public void teleOpLoop2() { 
         airThread = new Thread(airRun);
         airThread.start(); // starts automatic compressor switching in parallel
         pull1.set(true);
@@ -205,6 +206,8 @@ public class RobotTemplate extends SimpleRobot {
         
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
+       
+        double scale = SmartDashboard.getNumber("Scale Down Factor", 1);
         
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(true); 
@@ -219,9 +222,9 @@ public class RobotTemplate extends SimpleRobot {
                currentDriver = control.president;
            }
            boolean inverted = orientationSwitcher.orientation;
-           double xMovement = buffer(LEFT_X_AXIS,currentDriver,inverted,0.18,-0.18);
-           double yMovement = buffer(LEFT_Y_AXIS,currentDriver,inverted,0.18,-0.18);
-           double twist = buffer(RIGHT_X_AXIS,currentDriver,true,0.18,-0.18);
+           double xMovement = buffer(LEFT_X_AXIS,currentDriver,inverted,0.18,-0.18,scale);
+           double yMovement = buffer(LEFT_Y_AXIS,currentDriver,inverted,0.18,-0.18,scale);
+           double twist = buffer(RIGHT_X_AXIS,currentDriver,true,0.18,-0.18,scale);
            myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
            
            
@@ -308,6 +311,42 @@ public class RobotTemplate extends SimpleRobot {
 	return moveOut;
    }
    
+    
+    /**
+     * This function buffers Joystick.getRawAxis() input.
+     * @param axisNum The ID for the axis of a Joystick.
+     * @param joystickName The Joystick that input is coming from. 
+     * @param inverted Is it flipped?
+     * @param highMargin The high margin of the buffer.
+     * @param lowMargin The low margin of the buffer.
+     * @param scale The amount you want to divide the output by.
+     * @return moveOut - The buffered axis data from joystickName.getRawAxis().
+     **/
+    public double buffer(int axisNum, Joystick joystickName, boolean inverted, double highMargin, double lowMargin, double scale) {
+        double moveIn = joystickName.getRawAxis(axisNum);
+        double moveOut;
+        moveOut = 0.0;
+        
+        if(moveIn >= lowMargin && moveIn <= highMargin ) {
+         moveOut = 0.0;
+        }
+        else{
+            if(inverted){
+                moveOut = -moveIn;
+            }
+            else if(!inverted){ 
+                moveOut = moveIn;
+            }    
+        }
+	
+        if(scale <= 1){
+            scale = 1;
+        }
+        
+        moveOut = moveOut/scale;
+        
+	return moveOut;
+   }
         
     
     /**
