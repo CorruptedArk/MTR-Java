@@ -101,7 +101,8 @@ public class RobotTemplate extends SimpleRobot {
         autoChooser.addObject("Auto Twist", new Integer(3));
         
         teleChooser = new SendableChooser();
-        teleChooser.addDefault("Normal", new Integer(1));
+        teleChooser.addDefault("Default", new Integer(0));
+        teleChooser.addObject("Secondary", new Integer(1));
         teleChooser.addObject("Guest Driver", new Integer(2));
         
         SmartDashboard.putData("Autonomous Chooser", autoChooser);
@@ -139,6 +140,9 @@ public class RobotTemplate extends SimpleRobot {
         teleID = (Integer)teleChooser.getSelected();
         
         switch(teleID.intValue()) {
+            case 0:
+                teleOpLoop0();
+                break;
             case 1:
                 teleOpLoop1();
                 break;
@@ -155,6 +159,35 @@ public class RobotTemplate extends SimpleRobot {
     public void test() {
         
     
+    }
+    public void teleOpLoop0(){
+        airThread = new Thread(airRun);
+        airThread.start(); // starts automatic compressor switching in parallel
+        pull1.set(true);
+        push1.set(false);
+        
+       
+        solenoidControl1 = new SolenoidClick(TRIGGERS_AXIS,shootStick,pull1,push1,"axis"); 
+        solenoidThread1 = new Thread(solenoidControl1);
+        solenoidThread1.start();
+        
+        orientationThread = new Thread(orientationSwitcher);
+        orientationThread.start();
+        
+        while (isOperatorControl() && isEnabled()) {
+           myDrive.setSafetyEnabled(true);
+           boolean inverted = orientationSwitcher.orientation;
+           double xMovement = buffer(LEFT_X_AXIS,moveStick,inverted,0.18,-0.18);
+           double yMovement = buffer(LEFT_Y_AXIS,moveStick,inverted,0.18,-0.18);
+           double twist = buffer(RIGHT_X_AXIS,moveStick,true,0.18,-0.18);
+           myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
+           
+           
+           Timer.delay(0.01);
+        }
+        airRun.stop(); // stops automatic switching.
+        solenoidControl1.stop();
+        orientationSwitcher.stop();
     }
     
     public void teleOpLoop1() {
