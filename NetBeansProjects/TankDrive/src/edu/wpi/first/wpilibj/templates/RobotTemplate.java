@@ -47,23 +47,23 @@ public class RobotTemplate extends SimpleRobot {
     Victor rearLeft;
     Victor frontRight;
     Victor rearRight;
-    Compressor airCompressor;
-    Solenoid pull1;
-    Solenoid push1;
-    ExecutiveOrder control;
-    ExecutiveRelease release;
-    Thread releaseThread;
+    //Compressor airCompressor;
+    //Solenoid pull1;
+    //Solenoid push1;
+    //ExecutiveOrder control;
+    //ExecutiveRelease release;
+    //Thread releaseThread;
     RobotDrive myDrive;
     Joystick moveStick;
-    Joystick shootStick;
-    AirRunnable airRun;
-    Thread airThread;
-    SolenoidClick solenoidControl1;
-    Thread solenoidThread1;
+    //Joystick shootStick;
+    //AirRunnable airRun;
+    //Thread airThread;
+    //SolenoidClick solenoidControl1;
+    //Thread solenoidThread1;
     
     
-    DriveState orientationSwitcher;
-    Thread orientationThread;
+    //DriveState orientationSwitcher;
+    //Thread orientationThread;
     
     
     
@@ -71,25 +71,25 @@ public class RobotTemplate extends SimpleRobot {
 
 //This initializes the motors and controls.
     public void robotInit() {
-        frontLeft = new Victor(3);
+        frontLeft = new Victor(2);
         rearLeft = new Victor(4);
-        frontRight = new Victor(2);
-        rearRight = new Victor(1);
+        frontRight = new Victor(1);
+        rearRight = new Victor(3);
         myDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         moveStick = new Joystick(1);
-        shootStick = new Joystick(2);
-        airCompressor = new Compressor(1,1);
-        pull1 = new Solenoid(8); 
-        push1 = new Solenoid(7);
-        control = new ExecutiveOrder(moveStick,shootStick,Y_BUTTON);
-        release = new ExecutiveRelease(control);
-        releaseThread = new Thread(release);
-        airRun = new AirRunnable(airCompressor);
-        airThread = new Thread(airRun);
-        orientationSwitcher = new DriveState(true,moveStick,A_BUTTON);
-        orientationThread = new Thread(orientationSwitcher);
+        //shootStick = new Joystick(2);
+        //airCompressor = new Compressor(1,1);
+        //pull1 = new Solenoid(8); 
+        //push1 = new Solenoid(7);
+        //control = new ExecutiveOrder(moveStick,shootStick,Y_BUTTON);
+        //release = new ExecutiveRelease(control);
+        //releaseThread = new Thread(release);
+        //airRun = new AirRunnable(airCompressor);
+        //airThread = new Thread(airRun);
+        //orientationSwitcher = new DriveState(true,moveStick,A_BUTTON);
+        //orientationThread = new Thread(orientationSwitcher);
        
-        solenoidControl1 = new SolenoidClick(TRIGGERS_AXIS,control,pull1,push1,"axis"); 
+        //solenoidControl1 = new SolenoidClick(TRIGGERS_AXIS,control,pull1,push1,"axis"); 
         
         
        
@@ -99,17 +99,17 @@ public class RobotTemplate extends SimpleRobot {
      //This function is called once each time the robot enters autonomous mode.
     public void autonomous() {
         myDrive.setSafetyEnabled(false);
-        airThread = new Thread(airRun);
-        airThread.start();
-        pull1.set(true);
-        push1.set(false);
+        //airThread = new Thread(airRun);
+        //airThread.start();
+        //pull1.set(true);
+        //push1.set(false);
        
-        myDrive.tankDrive(1.0, 1.0);
-        Timer.delay(1.5);
-        myDrive.tankDrive(0.0, 0.0);
+        //myDrive.tankDrive(1.0, 1.0);
+        //Timer.delay(1.5);
+        //myDrive.tankDrive(0.0, 0.0);
         
-        Timer.delay(8.5);
-        airRun.stop();
+        //Timer.delay(8.5);
+        //airRun.stop();
     }
 
     
@@ -119,33 +119,33 @@ public class RobotTemplate extends SimpleRobot {
     public void operatorControl() {
         
        
-        airThread = new Thread(airRun);
-        airThread.start(); // starts automatic compressor switching in parallel
-        pull1.set(true);
-        push1.set(false);
-        releaseThread = new Thread(release);
-        releaseThread.start();
+        //airThread = new Thread(airRun);
+        //airThread.start(); // starts automatic compressor switching in parallel
+        //pull1.set(true);
+        //push1.set(false);
+        //releaseThread = new Thread(release);
+        //releaseThread.start();
        
-        solenoidThread1 = new Thread(solenoidControl1);
-        solenoidThread1.start();
+        //solenoidThread1 = new Thread(solenoidControl1);
+        //solenoidThread1.start();
         
         
-        orientationThread = new Thread(orientationSwitcher);
-        orientationThread.start();
+        //orientationThread = new Thread(orientationSwitcher);
+        //orientationThread.start();
         
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(true); 
-           boolean inverted = orientationSwitcher.orientation;
-           double leftValue = buffer(LEFT_Y_AXIS,moveStick,inverted,0.18,-0.18);
-           double rightValue = buffer(RIGHT_Y_AXIS,moveStick,inverted,0.18,-0.18);      
+           //boolean inverted = orientationSwitcher.orientation;
+           double leftValue = buffer(LEFT_Y_AXIS,moveStick,true,0.18,-0.18);
+           double rightValue = buffer(RIGHT_Y_AXIS,moveStick,true,0.18,-0.18);      
            
            myDrive.tankDrive(leftValue, rightValue);
            Timer.delay(0.01);
         }
-        airRun.stop(); // stops automatic switching.
-        solenoidControl1.stop();
-        release.stop();
-        orientationSwitcher.stop();
+        //airRun.stop(); // stops automatic switching.
+        //solenoidControl1.stop();
+        //release.stop();
+        //orientationSwitcher.stop();
         
     }    
     
