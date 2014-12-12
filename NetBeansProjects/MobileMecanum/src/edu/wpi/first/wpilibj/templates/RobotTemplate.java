@@ -120,7 +120,7 @@ public class RobotTemplate extends SimpleRobot {
         
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(true);
-           boolean inverted = orientationSwitcher.orientation;
+           boolean inverted = orientationSwitcher.getOrientation();
            double xMovement = buffer(LEFT_X_AXIS,moveStick,inverted,0.18,-0.18);
            double yMovement = buffer(LEFT_Y_AXIS,moveStick,inverted,0.18,-0.18);
            double twist = buffer(RIGHT_X_AXIS,moveStick,true,0.18,-0.18);

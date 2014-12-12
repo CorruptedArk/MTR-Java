@@ -92,7 +92,6 @@ public class RobotTemplate extends SimpleRobot {
         control = new ExecutiveOrder(moveStick,shootStick,Y_BUTTON);
         release = new ExecutiveRelease(control);
         airRun = new AirRunnable(airCompressor);
-        orientationSwitcher = new DriveState(true,moveStick,A_BUTTON);
         
         
         autoChooser = new SendableChooser();
@@ -160,6 +159,11 @@ public class RobotTemplate extends SimpleRobot {
         
     
     }
+    
+    
+    /**
+     * Normal teleOp, doesn't use an ExecutiveOrder.
+     */
     public void teleOpLoop0(){
         airThread = new Thread(airRun);
         airThread.start(); // starts automatic compressor switching in parallel
@@ -171,12 +175,13 @@ public class RobotTemplate extends SimpleRobot {
         solenoidThread1 = new Thread(solenoidControl1);
         solenoidThread1.start();
         
+        orientationSwitcher = new DriveState(true,moveStick,A_BUTTON);
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
         
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(true);
-           boolean inverted = orientationSwitcher.orientation;
+           boolean inverted = orientationSwitcher.getOrientation();
            double xMovement = buffer(LEFT_X_AXIS,moveStick,inverted,0.18,-0.18);
            double yMovement = buffer(LEFT_Y_AXIS,moveStick,inverted,0.18,-0.18);
            double twist = buffer(RIGHT_X_AXIS,moveStick,true,0.18,-0.18);
@@ -190,6 +195,9 @@ public class RobotTemplate extends SimpleRobot {
         orientationSwitcher.stop();
     }
     
+    /**
+     * Restricted teleOp, only uses ExecutiveOrder to override pneumatics.
+     */
     public void teleOpLoop1() {
         airThread = new Thread(airRun);
         airThread.start(); // starts automatic compressor switching in parallel
@@ -202,6 +210,7 @@ public class RobotTemplate extends SimpleRobot {
         solenoidThread1 = new Thread(solenoidControl1);
         solenoidThread1.start();
         
+        orientationSwitcher = new DriveState(true,moveStick,A_BUTTON);
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
         
@@ -210,7 +219,7 @@ public class RobotTemplate extends SimpleRobot {
            if(control.president.getRawButton(B_BUTTON)){
               control.trap();
            }
-           boolean inverted = orientationSwitcher.orientation;
+           boolean inverted = orientationSwitcher.getOrientation();
            double xMovement = buffer(LEFT_X_AXIS,moveStick,inverted,0.18,-0.18);
            double yMovement = buffer(LEFT_Y_AXIS,moveStick,inverted,0.18,-0.18);
            double twist = buffer(RIGHT_X_AXIS,moveStick,true,0.18,-0.18);
@@ -225,6 +234,9 @@ public class RobotTemplate extends SimpleRobot {
         orientationSwitcher.stop();
     }
     
+    /**
+     * Guest teleOp, uses ExecutiveOrder for full system.
+     */
     public void teleOpLoop2() { 
         airThread = new Thread(airRun);
         airThread.start(); // starts automatic compressor switching in parallel
@@ -237,6 +249,7 @@ public class RobotTemplate extends SimpleRobot {
         solenoidThread1 = new Thread(solenoidControl1);
         solenoidThread1.start();
         
+        orientationSwitcher = new DriveState(true,control,A_BUTTON);
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
        
@@ -254,7 +267,7 @@ public class RobotTemplate extends SimpleRobot {
            else {
                currentDriver = control.president;
            }
-           boolean inverted = orientationSwitcher.orientation;
+           boolean inverted = orientationSwitcher.getOrientation();
            double xMovement = buffer(LEFT_X_AXIS,currentDriver,inverted,0.18,-0.18,scale);
            double yMovement = buffer(LEFT_Y_AXIS,currentDriver,inverted,0.18,-0.18,scale);
            double twist = buffer(RIGHT_X_AXIS,currentDriver,true,0.18,-0.18,scale);
