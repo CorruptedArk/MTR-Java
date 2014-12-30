@@ -281,7 +281,9 @@ public class RobotTemplate extends SimpleRobot {
         release.stop();
         orientationSwitcher.stop();  
     }
-    
+    /**
+     * Forward driving.
+     */
     public void autonomous1(){
         myDrive.setSafetyEnabled(false);
         airThread = new Thread(airRun);
@@ -297,6 +299,9 @@ public class RobotTemplate extends SimpleRobot {
         airRun.stop();
     }
     
+    /**
+     * Sideways driving.
+     */
     public void autonomous2(){
         myDrive.setSafetyEnabled(false);
         airThread = new Thread(airRun);
@@ -312,6 +317,9 @@ public class RobotTemplate extends SimpleRobot {
         airRun.stop();
     }
     
+    /**
+     * Rotation in place.
+     */
     public void autonomous3(){
         myDrive.setSafetyEnabled(false);
         airThread = new Thread(airRun);
@@ -343,7 +351,7 @@ public class RobotTemplate extends SimpleRobot {
         moveOut = 0.0;
         
         if(moveIn >= lowMargin && moveIn <= highMargin ) {
-         moveOut = 0.0;
+            moveOut = 0.0;
         }
         else{
             if(inverted){
@@ -374,7 +382,7 @@ public class RobotTemplate extends SimpleRobot {
         moveOut = 0.0;
         
         if(moveIn >= lowMargin && moveIn <= highMargin ) {
-         moveOut = 0.0;
+            moveOut = 0.0;
         }
         else{
             if(inverted){

@@ -159,7 +159,7 @@ public class RobotTemplate extends SimpleRobot {
         moveOut = 0.0;
         
         if(moveIn >= lowMargin && moveIn <= highMargin ) {
-         moveOut = 0.0;
+            moveOut = 0.0;
         }
         else{
             if(inverted){
@@ -190,7 +190,7 @@ public class RobotTemplate extends SimpleRobot {
         moveOut = 0.0;
         
         if(moveIn >= lowMargin && moveIn <= highMargin ) {
-         moveOut = 0.0;
+            moveOut = 0.0;
         }
         else{
             if(inverted){
