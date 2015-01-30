@@ -117,15 +117,20 @@ public class RobotTemplate extends SimpleRobot {
     public void autonomous() {
         autonomousID = (Integer)autoChooser.getSelected();
         
+        double scale = SmartDashboard.getNumber("Scale Down Factor", 1.0);
+        if(scale <= 1){
+            scale = 1;
+        }
+        
         switch(autonomousID.intValue()) {
             case 1:
-                autonomous1();
+                autonomous1(scale);
                 break;
             case 2:
-                autonomous2();
+                autonomous2(scale);
                 break;
             case 3:
-                autonomous3();
+                autonomous3(scale);
                 break;
         }
         
@@ -179,12 +184,18 @@ public class RobotTemplate extends SimpleRobot {
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
         
+        double scale = SmartDashboard.getNumber("Scale Down Factor", 1);
+        
+        if(scale <= 1){
+            scale = 1;
+        }
+        
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(true);
            boolean inverted = orientationSwitcher.getOrientation();
-           double xMovement = buffer(LEFT_X_AXIS,moveStick,inverted,0.18,-0.18);
-           double yMovement = buffer(LEFT_Y_AXIS,moveStick,inverted,0.18,-0.18);
-           double twist = buffer(RIGHT_X_AXIS,moveStick,true,0.18,-0.18);
+           double xMovement = buffer(LEFT_X_AXIS,moveStick,inverted,0.18,-0.18,scale);
+           double yMovement = buffer(LEFT_Y_AXIS,moveStick,inverted,0.18,-0.18,scale);
+           double twist = buffer(RIGHT_X_AXIS,moveStick,true,0.18,-0.18,scale);
            myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
            
            
@@ -214,15 +225,21 @@ public class RobotTemplate extends SimpleRobot {
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
         
+        double scale = SmartDashboard.getNumber("Scale Down Factor", 1);
+        
+        if(scale <= 1){
+            scale = 1;
+        }
+        
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(true);
            if(control.president.getRawButton(B_BUTTON)){
               control.trap();
            }
            boolean inverted = orientationSwitcher.getOrientation();
-           double xMovement = buffer(LEFT_X_AXIS,moveStick,inverted,0.18,-0.18);
-           double yMovement = buffer(LEFT_Y_AXIS,moveStick,inverted,0.18,-0.18);
-           double twist = buffer(RIGHT_X_AXIS,moveStick,true,0.18,-0.18);
+           double xMovement = buffer(LEFT_X_AXIS,moveStick,inverted,0.18,-0.18,scale);
+           double yMovement = buffer(LEFT_Y_AXIS,moveStick,inverted,0.18,-0.18,scale);
+           double twist = buffer(RIGHT_X_AXIS,moveStick,true,0.18,-0.18,scale);
            myDrive.mecanumDrive_Cartesian(xMovement, yMovement, twist, 0.0);
            
            
@@ -255,6 +272,9 @@ public class RobotTemplate extends SimpleRobot {
        
         double scale = SmartDashboard.getNumber("Scale Down Factor", 1);
         
+        if(scale <= 1){
+            scale = 1;
+        }
         while (isOperatorControl() && isEnabled()) {
            myDrive.setSafetyEnabled(true); 
            Joystick currentDriver;
@@ -283,15 +303,16 @@ public class RobotTemplate extends SimpleRobot {
     }
     /**
      * Forward driving.
+     * @param scale The amount to divide the speed by.
      */
-    public void autonomous1(){
+    public void autonomous1(double scale){
         myDrive.setSafetyEnabled(false);
         airThread = new Thread(airRun);
         airThread.start();
         pull1.set(true);
         push1.set(false);
        
-        myDrive.mecanumDrive_Cartesian(0.0,1.0,0.0,0.0);
+        myDrive.mecanumDrive_Cartesian(0.0,1.0/scale,0.0,0.0);
         Timer.delay(1.5);
         myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
         
@@ -301,15 +322,16 @@ public class RobotTemplate extends SimpleRobot {
     
     /**
      * Sideways driving.
+     * @param scale The amount to divide the speed by.
      */
-    public void autonomous2(){
+    public void autonomous2(double scale){
         myDrive.setSafetyEnabled(false);
         airThread = new Thread(airRun);
         airThread.start();
         pull1.set(true);
         push1.set(false);
        
-        myDrive.mecanumDrive_Cartesian(1.0,0.0,0.0,0.0);
+        myDrive.mecanumDrive_Cartesian(1.0/scale,0.0,0.0,0.0);
         Timer.delay(1.5);
         myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
         
@@ -319,15 +341,16 @@ public class RobotTemplate extends SimpleRobot {
     
     /**
      * Rotation in place.
+     * @param scale The amount to divide the speed by.
      */
-    public void autonomous3(){
+    public void autonomous3(double scale){
         myDrive.setSafetyEnabled(false);
         airThread = new Thread(airRun);
         airThread.start();
         pull1.set(true);
         push1.set(false);
        
-        myDrive.mecanumDrive_Cartesian(0.0,0.0,1.0,0.0);
+        myDrive.mecanumDrive_Cartesian(0.0,0.0,1.0/scale,0.0);
         Timer.delay(1.5);
         myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
         
