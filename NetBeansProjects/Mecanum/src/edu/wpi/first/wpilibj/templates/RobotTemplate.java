@@ -106,7 +106,7 @@ public class RobotTemplate extends SimpleRobot {
         
         SmartDashboard.putData("Autonomous Chooser", autoChooser);
         SmartDashboard.putData("TeleOp Chooser", teleChooser);
-        SmartDashboard.putNumber("Scale Down Factor", 1);
+        SmartDashboard.putNumber("Scale Factor", 1);
         
         myDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         myDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
@@ -117,8 +117,8 @@ public class RobotTemplate extends SimpleRobot {
     public void autonomous() {
         autonomousID = (Integer)autoChooser.getSelected();
         
-        double scale = SmartDashboard.getNumber("Scale Down Factor", 1.0);
-        if(scale <= 1){
+        double scale = SmartDashboard.getNumber("Scale Factor", 1.0);
+        if(scale >= 1){
             scale = 1;
         }
         
@@ -184,9 +184,9 @@ public class RobotTemplate extends SimpleRobot {
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
         
-        double scale = SmartDashboard.getNumber("Scale Down Factor", 1);
+        double scale = SmartDashboard.getNumber("Scale Factor", 1);
         
-        if(scale <= 1){
+        if(scale >= 1){
             scale = 1;
         }
         
@@ -225,9 +225,9 @@ public class RobotTemplate extends SimpleRobot {
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
         
-        double scale = SmartDashboard.getNumber("Scale Down Factor", 1);
+        double scale = SmartDashboard.getNumber("Scale Factor", 1);
         
-        if(scale <= 1){
+        if(scale >= 1){
             scale = 1;
         }
         
@@ -270,9 +270,9 @@ public class RobotTemplate extends SimpleRobot {
         orientationThread = new Thread(orientationSwitcher);
         orientationThread.start();
        
-        double scale = SmartDashboard.getNumber("Scale Down Factor", 1);
+        double scale = SmartDashboard.getNumber("Scale Factor", 1);
         
-        if(scale <= 1){
+        if(scale >= 1){
             scale = 1;
         }
         while (isOperatorControl() && isEnabled()) {
@@ -312,7 +312,7 @@ public class RobotTemplate extends SimpleRobot {
         pull1.set(true);
         push1.set(false);
        
-        myDrive.mecanumDrive_Cartesian(0.0,1.0/scale,0.0,0.0);
+        myDrive.mecanumDrive_Cartesian(0.0,1.0*scale,0.0,0.0);
         Timer.delay(1.5);
         myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
         
@@ -331,7 +331,7 @@ public class RobotTemplate extends SimpleRobot {
         pull1.set(true);
         push1.set(false);
        
-        myDrive.mecanumDrive_Cartesian(1.0/scale,0.0,0.0,0.0);
+        myDrive.mecanumDrive_Cartesian(1.0*scale,0.0,0.0,0.0);
         Timer.delay(1.5);
         myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
         
@@ -350,7 +350,7 @@ public class RobotTemplate extends SimpleRobot {
         pull1.set(true);
         push1.set(false);
        
-        myDrive.mecanumDrive_Cartesian(0.0,0.0,1.0/scale,0.0);
+        myDrive.mecanumDrive_Cartesian(0.0,0.0,1.0*scale,0.0);
         Timer.delay(1.5);
         myDrive.mecanumDrive_Cartesian(0.0,0.0,0.0,0.0);
         
@@ -416,11 +416,11 @@ public class RobotTemplate extends SimpleRobot {
             }    
         }
 	
-        if(scale <= 1){
+        if(scale >= 1){
             scale = 1;
         }
         
-        moveOut = moveOut/scale;
+        moveOut = moveOut*scale;
         
 	return moveOut;
    }
